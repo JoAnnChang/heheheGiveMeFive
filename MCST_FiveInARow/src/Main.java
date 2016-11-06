@@ -1,47 +1,53 @@
 import java.util.ArrayList;
 
 public class Main {
-	private static Node root;
+	private ChessBoard cb;
 	
 	public static void main(String args) {
+		new Main();
+	}
+	
+	public Main() {
+		MCTSThread mctsThread;
+		
 		init();
 		
 		while(true) {
-			selection();
-			expansion();
-			simulation();
-			backpropagation();
+			//input 
+			Node n = input();
+			
+			// mcts thread
+			mctsThread = new MCTSThread(cb);
+			mctsThread.start();
+			
+			// start timer
+			// loop
+				// time check mcts thread
+				// mctsThread.getBest();
+				//
+			// end loop
+			
+			// output
 		}
 	}
 	
-	private static void init() {
+	private Node input() {
+		/*
+		 * format ex: [Black (H,7)]
+		 */
 		
+		return null;
 	}
 	
-	private static Node selection() {
-		Node sel = root;
-		while(!sel.getChildren().isEmpty()) {
-			ArrayList<Node> children = sel.getChildren();
-			sel = children.get(0);
-			for(Node child : children) {
-				if(child.getValue().greaterThan(sel.getValue())) {
-					sel = child;
-				}
-			}
-		}
-		
-		return sel;
+	private void output(Node n) {
+		/*
+		 * format ex: [Black (H,7)]
+		 */
 	}
 	
-	private static void expansion() {
-		
+	private void init() {
+		cb = new ChessBoard();
 	}
 	
-	private static void simulation() {
-		
-	}
 	
-	private static void backpropagation() {
-		
-	}
 }

@@ -12,15 +12,18 @@
  * 
  * public int QScore(int r, int c, int player) ---- count score after trying to put a chess piece on (r, c)
  * 
- * */
+ **/
 
 
 
 public class ChessBoard {
+	public enum ChessType{
+		EMPTY, PLAYER1, PLAYER2
+	}
 	
 	//Constant
 	public static final int EMPTY   = 0;  // The cell is empty.
-    private static final int PLAYER1 = 1;
+	public static final int PLAYER1 = 1;
     public static final int PLAYER2 = 2;
     private static final int FIVE = 1000;
     private static final int FOUR = 100;
@@ -43,8 +46,7 @@ public class ChessBoard {
 	ChessBoard() {
         board = new int[maxRow][maxCol];
         reset();
-	}
-	
+	}	
 	
 	public int getPlayer() {
 		return 3-nextPlayer;

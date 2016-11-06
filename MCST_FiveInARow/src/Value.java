@@ -6,11 +6,11 @@ public class Value {
 	public double set(int win, int total) {
 		this.win = win;
 		this.total = total;
-		return win/(double)total;
+		return (double)win/(double)total;
 	}
 	
 	public double toDouble() {
-		return win/(double)total;
+		return (double)win/(double)total;
 	}
 	
 	public boolean greaterThan(Value v) {
