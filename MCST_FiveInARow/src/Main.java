@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class Main {
@@ -23,14 +24,8 @@ public class Main {
 			
 			//chessBoard.move(r, c, chessType);
 			
-			// start timer
-			// loop
-				// time check mcts thread
-				// mctsThread.getBest();
-				//
-			// end loop
-			
 			// output
+			Point p = mctsThread.getOutput();
 		}
 	}
 	
