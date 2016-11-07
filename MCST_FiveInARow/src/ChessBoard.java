@@ -1,3 +1,7 @@
+import java.awt.Point;
+
+import javax.net.ssl.ExtendedSSLSession;
+
 /*
  * public int getPlayer() 
  * 
@@ -16,78 +20,93 @@
 
 
 
-public class ChessBoard {
-	public enum ChessType{
-		EMPTY, PLAYER1, PLAYER2
-	}
+public class ChessBoard implements Cloneable{
+	
+
 	
 	//Constant
 	public static final int EMPTY   = 0;  // The cell is empty.
-	public static final int PLAYER1 = 1;
-    public static final int PLAYER2 = 2;
-    private static final int FIVE = 1000;
-    private static final int FOUR = 100;
-    private static final int THREE = 10;
-    private static final int TWO = 1;
+	public static final int BLACK = 1;
+    public static final int WHITE = 2;
+    
+    public static final int FIVE = 1000;
+    public static final int FOUR = 100;
+    public static final int THREE = 10;
+    public static final int TWO = 1;
+    public static final int LOSE = -1000000;
 	
-	private int maxRow = 15;
-	private int maxCol = 15;
-	private int[][] board;
-	private int nextPlayer;
-	private int isWin;
+	public int maxRow = 15;
+	public int maxCol = 15;
+	private ChessType[][] board;
+	private ChessType player;
+	private ChessType isWin;
 	private int moves;
 	
 	ChessBoard(int rows, int cols) {
 		maxRow = rows;
         maxCol = cols;
-        board = new int[maxRow][maxCol];
+        board = new ChessType[maxRow][maxCol];
         reset();
 	}
 	ChessBoard() {
-        board = new int[maxRow][maxCol];
+		board = new ChessType[maxRow][maxCol];
         reset();
 	}	
 	
-	public int getPlayer() {
-		return 3-nextPlayer;
+	public ChessType getPlayer() {
+		
+		return player;
 	}
 	
-	public int getBaordStatus(int r, int c) {
+
+	public ChessType getBoardStatus(int r, int c) {
 		assert r >= 0 && r<=maxCol && c>=0 && c<=maxCol;
 		return board[r][c];
 	}
 	
-	public int getWinner(){
+	public ChessType getWinner(){
 		return isWin;
 	}
 
     public void reset() {
         for (int r=0; r<maxRow; r++) {
             for (int c=0; c<maxCol; c++) {
-                board[r][c] = EMPTY;
+                board[r][c] = ChessType.EMPTY;
             }
         }
         moves = 0;  // No moves so far.
-        isWin = 0;	// So far no winner
-        nextPlayer = PLAYER1;  
+        isWin = ChessType.EMPTY;	// So far no winner
+        player = ChessType.BLACK;  
     }
     
-    public void move(int r, int c) {
-        assert board[r][c] == EMPTY;	//make sure (r, c) is empty
-        board[r][c] = nextPlayer;  	// Record this move.
-        nextPlayer = 3-nextPlayer; 	// Flip players
-        moves++;                    // Increment number of moves.
+    public int move(int r, int c, ChessType chessType) {
+        assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
+        board[r][c] = chessType;  	// Record this move.
+        
+        return QScore(r, c, chessType);
+
     }
     
-    public int QScore(int r, int c, int player) {
+    public int move(Point point, ChessType chessType) {
+ 
+        return move(point.x, point.y, chessType);
+
+    }
+//    public void move(int r, int c) {
+//        assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
+//        board[r][c] = player;  	// Record this move.
+//        player = ChessType.nextType(player); 	// Flip players
+//        moves++;                  // Increment number of moves.
+//    }
+    
+    public int QScore(int r, int c, ChessType player) {
     	int score = 0;
-    	assert board[r][c] == EMPTY;	//make sure (r, c) is empty
-    	board[r][c] = player;	//put player on the position to make calculation
-	
+    	assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
+    	//board[r][c] = player;	//put player on the position to make calculation
     	for (int row = 0; row < maxRow; row++) {
     		for (int col = 0; col < maxCol; col++) {
-    			int p = board[row][col];
-    			if (p != EMPTY) {
+    			ChessType p = board[row][col];
+    			if (p != ChessType.EMPTY) {
                 // look at 4 kinds of direction
                 //  1. a column going up
                 //  2. a row going to the right
@@ -113,15 +132,15 @@ public class ChessBoard {
     		}
     	}
     	
-    	board[r][c] = EMPTY;	//recover the board
+    	//board[r][c] = ChessType.EMPTY;	//recover the board
     	return score;
     }
     
     
-    private int countScore(int r, int c, int dr, int dc, int player) {
+    private int countScore(int r, int c, int dr, int dc, ChessType player) {
     	int count = 1;
         for (int i=1; i<5; i++) {
-        	if(board[r+dr*i][c+dc*i] != 3-player) {
+        	if(board[r+dr*i][c+dc*i] != ChessType.nextType(player)) {
         		if(board[r+dr*i][c+dc*i] == player)	count++;
         	}
         	else break;
@@ -134,5 +153,17 @@ public class ChessBoard {
         	return FIVE;
         }
         else return 0;
+    }
+    
+    
+    @Override
+    public ChessBoard clone() {
+    	ChessBoard clonedChessboard = new ChessBoard();
+	for (int row = 0; row < maxRow; ++row) {
+	    for (int column = 0; column < maxRow; ++column) {
+	    	clonedChessboard.move(row, column, this.board[row][column]);
+	    }
+	}
+	return clonedChessboard;
     }
 }

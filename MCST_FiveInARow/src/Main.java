@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Main {
-	private ChessBoard cb;
+	private ChessBoard chessBoard;
 	
 	public static void main(String args) {
 		new Main();
@@ -16,9 +16,12 @@ public class Main {
 			//input 
 			Node n = input();
 			
+			
 			// mcts thread
-			mctsThread = new MCTSThread(cb);
+			mctsThread = new MCTSThread(chessBoard.clone(), new Node(null, chessBoard.clone(), 7, 7));
 			mctsThread.start();
+			
+			//chessBoard.move(r, c, chessType);
 			
 			// start timer
 			// loop
@@ -46,7 +49,7 @@ public class Main {
 	}
 	
 	private void init() {
-		cb = new ChessBoard();
+		chessBoard = new ChessBoard();
 	}
 	
 	

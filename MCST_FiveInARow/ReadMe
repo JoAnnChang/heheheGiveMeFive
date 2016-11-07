@@ -1,0 +1,9 @@
+1. finish expand, select, backpropogation, 
+
+2. not finsih: simulate
+
+
+3. Change: add Chesstype(player1->black, player2->white), 
+			modify some methods,
+			add some getter and setter.
+			
