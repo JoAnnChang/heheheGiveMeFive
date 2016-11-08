@@ -57,9 +57,9 @@ public class Node {
 	}
 	
 	
-	public ChessBoard getChessBoard(){
-		return chessBoard;
-	}
+//	public ChessBoard getChessBoard(){
+//		return chessBoard;
+//	}
 	
 	public ChessType getChesstype(){
 		return this.chessBoard.getPlayer();

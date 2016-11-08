@@ -18,7 +18,8 @@ public class Main {
 			
 			
 			// mcts thread
-			mctsThread = new MCTSThread(chessBoard.clone(), new Node(null, chessBoard.clone(), 7, 7));
+			ChessBoard chessBoard_tmp = chessBoard.clone();
+			mctsThread = new MCTSThread(chessBoard_tmp, new Node(null, chessBoard_tmp, 7, 7));
 			mctsThread.start();
 			
 			//chessBoard.move(r, c, chessType);

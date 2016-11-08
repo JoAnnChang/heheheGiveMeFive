@@ -78,17 +78,29 @@ public class ChessBoard implements Cloneable{
         isWin = ChessType.EMPTY;	// So far no winner
         player = ChessType.BLACK;  
     }
+    public int move(int r, int c) {
+        assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
+        board[r][c] = player;  	// Record this move.
+        player = ChessType.nextType(player);
+        return QScore(r, c, ChessType.nextType(player));
+
+    }
+    
+    public int move(Point p){
+    	return move(p.x, p.y);
+    }
     
     public int move(int r, int c, ChessType chessType) {
         assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
         board[r][c] = chessType;  	// Record this move.
         
+        this.player = ChessType.nextType(chessType);
         return QScore(r, c, chessType);
 
     }
     
     public int move(Point point, ChessType chessType) {
- 
+    	
         return move(point.x, point.y, chessType);
 
     }

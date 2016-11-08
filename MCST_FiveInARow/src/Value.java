@@ -29,6 +29,7 @@ public class Value {
 	}
 	
 	public boolean greaterThan(Value v) {
+		
 		if(this.toDouble() > v.toDouble()) {
 			return true;
 		}

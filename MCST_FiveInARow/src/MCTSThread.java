@@ -24,32 +24,55 @@ public class MCTSThread extends Thread{
 	
 	public void run() {
 		//Add timer count, when come to 10, stops
-		//Temp:
+		
+		//Temporary timer, do 1000 times
 		int timer = 10000;
 		while(timer-- > 0) {
-			//to memorize the backpropagate path
-
-			//START select
-			//Always Start from the root
-			winType = ChessType.EMPTY;
-			Node selected = select(root, chessBoard);
 			
+			//We will use the chessBoard many and many times,
+			//and every time we shoud assure it would be the original one
+			ChessBoard chessBoard_tmp = chessBoard.clone();
+
+			//-----------------------------//
+			//------START select-----------//
+			//-----------------------------//
+			
+			//A win type to check if the selection already get a win move,  
+			// then there is no need to do next, just back propagate. 
+			winType = ChessType.EMPTY;
+			//Always Start from the root
+			Node selected = select(root, chessBoard_tmp);
 			
 			if(winType != ChessType.EMPTY){
-				
+				backpropagate(selected, root.getChesstype()==winType);
+				continue;
 			}
 			
-			//START expand
-			//pass into the selected node, return the result of the children of the node
-			ArrayList<Node> nodes = expand(selected);
+			//-----------------------------//
+			//------START expand-----------//
+			//-----------------------------//
+			//pass the selected node, the selected node will grow a list of children
+			//then return the list
+			ArrayList<Node> childNodes = expand(selected, chessBoard_tmp);
 			
-			//START simulate 
-			//will be n times... here just simulate 1 time to test
-			Node secondSelected = select(selected, chessBoard);
-			ChessType result = simulate(secondSelected);
+			
+			//-----------------------------//
+			//------START simulate---------//
+			//-----------------------------//
+			//Select N child nodes to simulate, but here we only do once for testing.
+			Node secondSelected = select(selected, chessBoard_tmp);
+			//pass the second Selected node, return a result that the node will win or not
+			ChessType result = simulate(secondSelected, chessBoard_tmp);
 
 			
+			//-----------------------------//
+			//------START simulate---------//
+			//-----------------------------//
+			//Will do N times, but here we only do once for testing
+			//pass the second selected node and the result to back propagate
 			backpropagate(secondSelected, (result==root.getChesstype()));
+			
+			
 			//START backpropagate
 			//backpropagate(backpropagateTrack);	
 //			for(Node n : nodes) {
@@ -64,6 +87,13 @@ public class MCTSThread extends Thread{
 		Node returnNode = getBest();
 	}
 	
+    /**
+     * At last, to decide the best move, 
+     * compare every child node of root.
+     * Return one with best win/num
+     *
+     * @return Node : the child with best move
+     */
 	public Node getBest() {
 		Node sel = root.getChildren().get(0);
 		
@@ -76,6 +106,15 @@ public class MCTSThread extends Thread{
 		return sel;
 	}
 	
+    /**
+     * Select 
+     * 
+     * recursivly select the child with the best potential.
+     * 
+     * @param the node to start the select
+     * @param the chessBoard  
+     * @return Node : the child with the best potential
+     */
 	private Node select(Node currentNode, ChessBoard chessBoard) {
 		
 		Node selected = currentNode;
@@ -93,7 +132,7 @@ public class MCTSThread extends Thread{
 				}
 			}
 			
-			if (chessBoard.move(selected.getPoint(), currentChessType) == chessBoard.FIVE) {
+			if (chessBoard.move(selected.getPoint()) == chessBoard.FIVE) {
 				winType = currentChessType;
 				break;
 			 }
@@ -105,18 +144,53 @@ public class MCTSThread extends Thread{
 		return selected;
 	}
 	
-	private ArrayList<Node> expand(Node parentNode) {
-		//for each point(not empty), put a range of its neignbor into arraylist
-		ChessBoard chessBoard = parentNode.getChessBoard();
-		//a hash set(no duplicate) to record all the legalMoves(empty place, not too far)
-		HashSet<Point> legalMoves = new HashSet<Point>();
-		//turn the hash set to the arraylist
+    /**
+     * Expand 
+     * 
+     * expand the children node of the parent node,
+     * we first search around the current chessboard
+     * 
+     * @param the parent node to expand
+     * @return Node : the child with the best potential
+     */
+	private ArrayList<Node> expand(Node parentNode, ChessBoard chessBoard) {
+		
+		//get a list of legal moves
+		ArrayList<Point> legalMoves_list = searchTheLegalMoves(chessBoard);
+		//the list of child nodes with legal moves
 		ArrayList<Node> legalChildNodes = new ArrayList<Node>();
 		
 		//the type of the node
-		ChessType type = parentNode.getChesstype();
+		ChessType currentChessType = parentNode.getChesstype();
 		
-		//search all the none empty place to expand (to prevent the move goes too far than the exists)
+
+		
+		
+		//turn the hash set to the arraylist
+		for(Point point : legalMoves_list){
+			ChessBoard cb_tmp = chessBoard.clone();
+			cb_tmp.move(point);
+			Node newChildNode = new Node(parentNode, cb_tmp, point);
+			
+			//parent node add the child
+			legalChildNodes.add(newChildNode);
+		}
+		
+		//add all the new child nodes to the paren node
+		parentNode.addAllChild(legalChildNodes);
+		
+		return legalChildNodes;
+	}
+	
+	
+	private ArrayList<Point> searchTheLegalMoves(ChessBoard chessBoard){
+		//for each point(not empty), put a range of its neignbor into arraylist
+		//a hash set(no duplicate) to record all the legalMoves(empty place, not too far)
+		HashSet<Point> legalMoves = new HashSet<Point>();
+		
+		
+		//search all the none empty place to expand 
+		//to prevent the move goes too far than the exists, we set a range=3
 		for(int i=0; i<chessBoard.maxRow; i++){
 			for(int j=0; j<chessBoard.maxCol; j++){
 				if(chessBoard.getBoardStatus(i, j) != ChessType.EMPTY){
@@ -124,20 +198,9 @@ public class MCTSThread extends Thread{
 				}
 			}
 		}
+		return new ArrayList<Point>(legalMoves);
 		
-		//turn the hash set to the arraylist
-		for(Point point : legalMoves){
-			ChessBoard cb_tmp = chessBoard.clone();
-			Node newChildNode = new Node(parentNode, cb_tmp, point);
-			
-			//parent node add the child
-			legalChildNodes.add(newChildNode);
-		}
-		parentNode.addAllChild(legalChildNodes);
-		
-		return legalChildNodes;
 	}
-	
 	private ArrayList<Point> searchTheRange(ChessBoard chessBoard, int r, int c){
 		int minR = Math.max(0, r-SEARCH_RANGE);
 		int maxR = Math.min(chessBoard.maxRow, r+SEARCH_RANGE);
@@ -160,10 +223,16 @@ public class MCTSThread extends Thread{
 		return searchTheRange(chessBoard, point.x, point.y);
 	}
 	
-	
-	// return the winning chess type.
-	private ChessType simulate(Node node) {
-		ChessBoard chessBoard = node.getChessBoard();
+    /**
+     * Simulate 
+     * 
+     * simualte the node will finally win or not
+     * 
+     * @param node to simulate
+     * @param chessboard
+     * @return ChessType: who wins?
+     */
+	private ChessType simulate(Node node, ChessBoard chessBoard) {
 		ChessType chessType = node.getChesstype();
 		ChessType winType = ChessType.EMPTY;
 		
