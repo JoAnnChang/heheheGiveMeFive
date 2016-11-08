@@ -1,9 +1,22 @@
-1. finish expand, select, backpropogation, 
+★ Finished:
+	1. select (not test)	
+	2. expand (not test)	
+	3. simulate (not test)	
+	4. backpropagate (not test)	
 
-2. not finsih: simulate
+☆ Unfinished:
+	1. TESTING
+	2. optimization (the simulation will cost too much time)
+	3. Input & Output
+	4. timer thread  for 10 sec
+	5. code explanation
+	6. the numOfChildSelected and numOfAllSelected problem
 
-
-3. Change: add Chesstype(player1->black, player2->white), 
-			modify some methods,
-			add some getter and setter.
-			
+◎ Changed:
+	1. change Chesstype(player1->black, player2->white), 
+	for the convience to match the test case when TA will give
+	"Black" or "White" situation.
+	2. modify some methods
+	3. add some getter and setter.
+	4. add UCB (not testing)
+	

@@ -2,8 +2,12 @@ import java.awt.Point;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import javax.swing.border.EmptyBorder;
+
 
 public class MCTSThread extends Thread{
 	private Node root;
@@ -156,11 +160,17 @@ public class MCTSThread extends Thread{
 		return searchTheRange(chessBoard, point.x, point.y);
 	}
 	
-	// return chess type. 1->player1, 2->player2
+	
+	// return the winning chess type.
 	private ChessType simulate(Node node) {
 		ChessBoard chessBoard = node.getChessBoard();
-		HashSet<Point> legalMoves = new HashSet<Point>();
-		ArrayList<Node> legalChildNodes = new ArrayList<Node>();
+		ChessType chessType = node.getChesstype();
+		ChessType winType = ChessType.EMPTY;
+		
+		
+		HashSet<Point> legalMoves_set = new HashSet<Point>();
+		ArrayList<Point> legalMoves_list = new ArrayList<Point>();
+		List<Point> choseList = new ArrayList<>();
 		
 		//the type of the node
 		ChessType type = node.getChesstype();
@@ -168,17 +178,42 @@ public class MCTSThread extends Thread{
 		for(int i=0; i<chessBoard.maxRow; i++){
 			for(int j=0; j<chessBoard.maxCol; j++){
 				if(chessBoard.getBoardStatus(i, j) != ChessType.EMPTY){
-					legalMoves.addAll(searchTheRange(chessBoard, i, j));
+					//to prevent repeat
+					legalMoves_set.addAll(searchTheRange(chessBoard, i, j));
 				}
 			}
 		}
-		for(Point point : legalMoves){
-			ChessBoard cb_tmp = chessBoard.clone();
-			legalChildNodes.add(new Node(node, cb_tmp, point));
+		for(Point point : legalMoves_set){
+			legalMoves_list.add(point);
 		}
 		
 		
-		return ChessType.EMPTY;
+		while(!legalMoves_list.isEmpty()){
+			Random random = new Random();
+			int size = legalMoves_list.size();
+			int randomIndex = random.nextInt(size);
+			Point chosePoint = legalMoves_list.get(randomIndex);
+		    choseList.add(chosePoint);
+		    
+		    if (chessBoard.move(chosePoint, chessType) == ChessBoard.FIVE) {
+				winType = chessType;
+				return winType;
+		    }
+		    legalMoves_list.remove(randomIndex);
+
+		    List<Point> aroundList = searchTheRange(chessBoard, chosePoint.x, chosePoint.y);
+		    for (Point point : aroundList) {
+				if (!legalMoves_set.contains(point)) {
+					legalMoves_set.add(point);
+					legalMoves_list.add(point);
+				}
+		    }
+
+		    chessType = ChessType.nextType(chessType);
+		}
+		
+		
+		return winType;
 	}
 	
 	private void backpropagate(Node node, boolean isWin) {
