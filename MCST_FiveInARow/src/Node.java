@@ -6,23 +6,23 @@ public class Node {
 	private Node parent;
 	private ArrayList<Node> children;
 	private Value value;
-	private ChessBoard chessBoard;
+	private ChessType chessType;
 	//The conponent's step on the previous round.
 	private Point point;
 	
-	public Node(Node parent,ChessBoard chessBoard,  int r, int c) {
+	public Node(Node parent,  ChessType chessType, int r, int c) {
 		this.parent = parent;
 		this.children = new ArrayList<Node>();
-		this.chessBoard = chessBoard;
+		this.chessType = chessType;
 		this.value = new Value();
 		this.point = new Point(r, c);
 		
 	}
 	
-	public Node(Node parent,ChessBoard chessBoard,  Point point) {
+	public Node(Node parent,  ChessType chessType, Point point) {
 		this.parent = parent;
 		this.children = new ArrayList<Node>();
-		this.chessBoard = chessBoard;
+		this.chessType = chessType;
 		this.value = new Value();
 		this.point = point;
 	}
@@ -57,12 +57,12 @@ public class Node {
 	}
 	
 	
-	public ChessBoard getChessBoard(){
-		return chessBoard;
-	}
+//	public ChessBoard getChessBoard(){
+//		return chessBoard;
+//	}
 	
 	public ChessType getChesstype(){
-		return this.chessBoard.getPlayer();
+		return chessType;
 	}
 	
 	//numOfAllGame is from the parent
@@ -70,13 +70,20 @@ public class Node {
 		return this.value.getUCB(numOfAllGame);
 	}
 	
+	public int  getNumOfSelected(){
+		return this.value.total;
+	}
+	public double  getNumOfWin(){
+		return this.value.win;
+	}
 	
-    public void updateStatus(boolean isWin) {
+	
+    public void updateStatus(Boolean winAdd) {
     	this.value.addTotal(1);
-
-    	if(isWin){
-    		this.value.addWin(chessBoard.FIVE);
+    	if(winAdd){
+    		this.value.addWin(1);
     	}
+   		
 
     	
     }

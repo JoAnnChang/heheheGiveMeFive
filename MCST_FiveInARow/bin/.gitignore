@@ -1,6 +1,5 @@
-/ChessBoard.class
 /ChessType.class
-/MCTSThread.class
-/Main.class
-/Node.class
 /Value.class
+/Node.class
+/ChessBoard.class
+/Main$Alpha.class

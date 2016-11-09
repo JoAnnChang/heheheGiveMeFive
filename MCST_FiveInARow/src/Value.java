@@ -1,8 +1,9 @@
 
 public class Value {
-	private int win = 0;
-	private int total = 0;
-	private double ucb = 0;
+	public double win = 0;
+	public int total = 0;
+	//to prevent /0
+	private static double Delta = 0.00000001;
 	
 	public Value(){
 		this.win = 0;
@@ -29,6 +30,7 @@ public class Value {
 	}
 	
 	public boolean greaterThan(Value v) {
+		
 		if(this.toDouble() > v.toDouble()) {
 			return true;
 		}
@@ -38,7 +40,7 @@ public class Value {
 	}
 	
 	public double getUCB(int numOfAllGame){
-		return win / total
-				+ Math.sqrt(2 * Math.log(numOfAllGame) / (total));
+		return win / (total+Delta)
+				+ Math.sqrt(2 * Math.log(numOfAllGame) / (total+Delta));
 	}
 }

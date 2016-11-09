@@ -2,6 +2,8 @@ import java.awt.Point;
 
 import javax.net.ssl.ExtendedSSLSession;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 /*
  * public int getPlayer() 
  * 
@@ -78,17 +80,30 @@ public class ChessBoard implements Cloneable{
         isWin = ChessType.EMPTY;	// So far no winner
         player = ChessType.BLACK;  
     }
+//    public int move(int r, int c) {
+//        assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
+//        board[r][c] = player;  	// Record this move.
+//        player = ChessType.nextType(player);
+//        return QScore(r, c, ChessType.nextType(player));
+//
+//    }
+    
+//    public int move(Point p){
+//    	return move(p.x, p.y);
+//    }
     
     public int move(int r, int c, ChessType chessType) {
         assert board[r][c] == ChessType.EMPTY;	//make sure (r, c) is empty
         board[r][c] = chessType;  	// Record this move.
         
-        return QScore(r, c, chessType);
-
+        this.player = ChessType.nextType(chessType);
+        
+        
+        return isWin(this, chessType, new Point(r, c))==true? 1:0;
     }
     
     public int move(Point point, ChessType chessType) {
- 
+    	
         return move(point.x, point.y, chessType);
 
     }
@@ -155,7 +170,70 @@ public class ChessBoard implements Cloneable{
         else return 0;
     }
     
+
     
+    public boolean isWin(ChessBoard chessBoard, ChessType chessType, Point p){
+
+    	int x = p.x;
+    	int y = p.y;
+    	int sameCounter = 0;
+    	//check column
+    	if(checkWin(chessBoard, chessType, x-4, x+4+1, 1, y, y+1, 0)){
+    		return true;
+    	}
+      	if(checkWin(chessBoard, chessType, x, x+1, 0, y-4, y+4+1, 1)){
+      		return true;
+    	}
+      	if(checkWin(chessBoard, chessType, x-4, x+4+1, 1, y-4,y+4+1, 1)){
+    		return true;
+    	}
+      	if(checkWin(chessBoard, chessType, x-4, x+4+1, 1, y+4, y-4-1, -1)){
+    		return true;
+    	}
+    	
+    	return false;
+    }
+
+//    public static void main(String[] args){
+//    	ChessBoard chessBoard = new ChessBoard();
+//    	chessBoard.move(1,1, ChessType.WHITE);
+//    	chessBoard.move(2,2, ChessType.WHITE);
+//    	chessBoard.move(3,3, ChessType.WHITE);
+//    	System.out.println(chessBoard.move(0,0, ChessType.WHITE));
+//    }
+    private boolean checkWin(ChessBoard chessBoard, ChessType chessType, 
+    	int startX, int endX, int countX, int startY, int endY, int countY){
+
+    	int sameCounter = 0;
+    	    	
+    	for(int i=startX, j=startY; i!=endX&&j!=endY; i+=countX, j+=countY){
+    		if(i<0 || i>=15 || j<0 || j>=15){
+    			continue;
+    		}
+    		if(chessBoard.getBoardStatus(i, j) != chessType){
+    			sameCounter = 0;
+    			continue;
+    		}
+    		sameCounter++;
+    		if(sameCounter == 5)
+    			return true;
+//    		else if(sameCounter == 4){
+//    			Point right_chance = new Point(i+countX, j+countY);
+//    			Point left_chance = new Point(i-countX*4, j-countY*4);
+//    			if((right_chance.x>=0 && right_chance.x<15 && right_chance.y>=0 && right_chance.y<15)
+//    					&&(left_chance.x>=0 && left_chance.x<15 && left_chance.y>=0 && left_chance.y<15)){
+//        			if(chessBoard.getBoardStatus(right_chance.x, right_chance.y)==ChessType.EMPTY
+//        					&& chessBoard.getBoardStatus(left_chance.x, left_chance.y) == ChessType.EMPTY){
+//        				
+//        				return true;
+//        			}
+//    			}
+//
+//    		}
+    	}
+    	
+		return false;
+    }
     @Override
     public ChessBoard clone() {
     	ChessBoard clonedChessboard = new ChessBoard();
