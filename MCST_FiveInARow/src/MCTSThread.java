@@ -14,6 +14,7 @@ public class MCTSThread extends Thread{
 	private Node root;
 	private ChessBoard chessBoard;
 	private ChessType winType;
+	private Object lock;
 	
 	public static final int MAX_SIMULAYER = 10;
 	public static final int SIMU_RANGE = 5;
@@ -23,6 +24,7 @@ public class MCTSThread extends Thread{
 		super();
 		this.chessBoard = cb;
 		this.root = currentNode;
+		this.lock = new Object();
 	}
 	
 	public void run() {
@@ -110,6 +112,7 @@ public class MCTSThread extends Thread{
 		return sel;
 	}
 	
+<<<<<<< HEAD
     /**
      * Select 
      * 
@@ -119,6 +122,19 @@ public class MCTSThread extends Thread{
      * @param the chessBoard  
      * @return Node : the child with the best potential
      */
+=======
+	public Point getOutput() {
+		try {
+            sleep(10 * 1000 - 100);
+        } 
+		catch (InterruptedException e) {}
+		
+		synchronized(lock) {
+			return getBest().getPoint();
+		}
+	}
+	
+>>>>>>> master
 	private Node select(Node currentNode, ChessBoard chessBoard) {
 		
 		Node selected = currentNode;
@@ -339,14 +355,17 @@ public class MCTSThread extends Thread{
 	private void backpropagate(Node node, boolean isWin) {
 		// select best node at same time
 		
-		//update until the root (the parent of root is null)
-		while(node.getParent() != null){
+		// lock for main thread
+		synchronized(lock) {
+			//update until the root (the parent of root is null)
+			while(node.getParent() != null){
+				node.updateStatus(isWin);
+				node = node.getParent();
+			}
+			
+			//update the root
 			node.updateStatus(isWin);
-			node = node.getParent();
 		}
-		
-		//update the root
-		node.updateStatus(isWin);
 		
 	}
 }

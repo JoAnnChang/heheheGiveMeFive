@@ -1,7 +1,19 @@
+<<<<<<< HEAD
 /ChessType.class
 /Value.class
 /Node.class
 /ChessBoard.class
+<<<<<<< Updated upstream
 /MCTSThread.class
 /Main.class
 /MCTSThread$1.class
+=======
+=======
+/ChessBoard.class
+/ChessType.class
+/MCTSThread.class
+/Main.class
+/Node.class
+/Value.class
+>>>>>>> master
+>>>>>>> Stashed changes
