@@ -78,7 +78,7 @@ public class ChessBoard implements Cloneable {
 		player = ChessType.BLACK;
 	}
 
-	public MyScore move(int r, int c, ChessType chessType) {
+	public int move(int r, int c, ChessType chessType) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
 		board[r][c] = chessType; // Record this move.
 
@@ -86,7 +86,7 @@ public class ChessBoard implements Cloneable {
 
 	}
 
-	public MyScore move(Point point, ChessType chessType) {
+	public int move(Point point, ChessType chessType) {
 
 		return move(point.x, point.y, chessType);
 
@@ -99,14 +99,14 @@ public class ChessBoard implements Cloneable {
 	// moves++; // Increment number of moves.
 	// }
 
-	public MyScore QScore(int r, int c, ChessType player) {
+	public int QScore(int r, int c, ChessType player) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
 		// board[r][c] = player; //put player on the position to make
 		// calculation
 		return QScore(this.board, player);
 	}
-	public static MyScore QScore(ChessType[][] board2, ChessType player) {
-		MyScore tmpScore;
+	public static int QScore(ChessType[][] board2, ChessType player) {
+		MyScore tmpScore = new MyScore();
 		MyScore score = new MyScore();
 		for (int row = 0; row < maxRow; row++) {
 			for (int col = 0; col < maxCol; col++) {
@@ -116,27 +116,27 @@ public class ChessBoard implements Cloneable {
 				// 3. a diagonal up and to the right
 				// 4. a diagonal up and to the left
 				if (row < maxRow - 4) {// Look up
-					tmpScore = countScore(row, 1, col, 0, player, board2);
+					tmpScore = countScore(row, 1, col, 0, player, ChessType[][] board2);
 					score.refresh(tmpScore);
 				}
 
 				if (col < maxCol - 4) { // row to right
-					tmpScore = countScore(row, 0, col, 1, player, board2);
+					tmpScore = countScore(row, 0, col, 1, player, ChessType[][] board2);
 					score.refresh(tmpScore);
 					if (row < maxRow - 4) { // diagonal up to right
-						tmpScore = countScore(row, 1, col, 1, player, board2);
+						tmpScore = countScore(row, 1, col, 1, player, ChessType[][] board2);
 						score.refresh(tmpScore);
 					}
 				}
 
 				if (col > 3 && row < maxRow - 4) { // diagonal up left
-					tmpScore = countScore(row, 1, col, -1, player, board2);
+					tmpScore = countScore(row, 1, col, -1, player, ChessType[][] board2);
 					score.refresh(tmpScore);
 				}
 
 			}
 		}
-		return score;
+		return score.getScore();
 	}
 
 	private static MyScore countScore(int r, int c, int dr, int dc, ChessType player, ChessType[][] b) {
@@ -239,3 +239,6 @@ public class ChessBoard implements Cloneable {
 	}
 	
 }
+
+
+

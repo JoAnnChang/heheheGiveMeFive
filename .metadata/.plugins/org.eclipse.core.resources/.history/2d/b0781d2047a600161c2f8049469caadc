@@ -89,10 +89,10 @@ public class MCTSThread extends Thread{
 				}
 			}
 			
-//			if (chessBoard.move(selected.getPoint(), currentChessType) == chessBoard.FIVE) {
-//				winType = currentChessType;
-//				break;
-//			 }
+			if (chessBoard.move(selected.getPoint(), currentChessType) == chessBoard.FIVE) {
+				winType = currentChessType;
+				break;
+			 }
 			
 			//change the type
 			currentChessType = ChessType.nextType(currentChessType);

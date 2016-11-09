@@ -42,12 +42,9 @@ public class MyScore {
 		return;
 	}
 	
-	public int getAttackScore() {
+	public int getScore() {
 		int pos = a_five*10000 + a_h_four*5000 + a_four*1000 + a_h_three*500 + a_three*100 + a_two*10;
-		return pos;
-	}
-	public int getDefenseScore() {
 		int neg = d_five*10000 + d_h_four*5000 + d_four*1000 + d_h_three*500 + d_three*100 + d_two*10;
-		return neg;
+		return pos-neg;
 	}
 }
