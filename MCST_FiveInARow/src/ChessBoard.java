@@ -99,6 +99,10 @@ public class ChessBoard implements Cloneable{
 
     }
     
+    public void remove(int r, int c) {
+        board[r][c] = ChessType.EMPTY;  	// Record this move.
+    }
+    
     public int move(Point point, ChessType chessType) {
     	
         return move(point.x, point.y, chessType);

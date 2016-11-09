@@ -1,6 +1,7 @@
 import java.awt.Point;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -14,6 +15,8 @@ public class MCTSThread extends Thread{
 	private ChessBoard chessBoard;
 	private ChessType winType;
 	
+	public static final int MAX_SIMULAYER = 10;
+	public static final int SIMU_RANGE = 5;
 	private static final int SEARCH_RANGE = 3;
 	
 	public MCTSThread(ChessBoard cb, Node currentNode) {
@@ -62,7 +65,8 @@ public class MCTSThread extends Thread{
 			//Select N child nodes to simulate, but here we only do once for testing.
 			Node secondSelected = select(selected, chessBoard_tmp);
 			//pass the second Selected node, return a result that the node will win or not
-			ChessType result = simulate(secondSelected, chessBoard_tmp);
+			simulate_greedy(secondSelected, chessBoard_tmp, secondSelected);
+			ChessType result = (secondSelected.Q > 0) ? winType : ChessType.nextType(winType);
 
 			
 			//-----------------------------//
@@ -223,6 +227,53 @@ public class MCTSThread extends Thread{
 		return searchTheRange(chessBoard, point.x, point.y);
 	}
 	
+	private void simulate_greedy(Node node, ChessBoard chessBoard, Node root) {
+		if(node.simuLayer < MAX_SIMULAYER) {
+			node.addAllChild(findPossibleMove(node, chessBoard));
+			
+			for(Node c : node.getChildren()){
+				c.simuLayer++;
+				
+				chessBoard.move(c.getPoint());
+				simulate_greedy(c, chessBoard, root);
+				chessBoard.remove(c.getPoint().x, c.getPoint().y);
+			}
+		}
+		
+		if(node.getChildren().size() == 0) {
+			chessBoard.remove(node.getPoint().x, node.getPoint().y);
+			root.Q += chessBoard.QScore(node.getPoint().x, node.getPoint().y, null);
+			chessBoard.move(node.getPoint());
+		}
+	}
+	
+	private ArrayList<Node> findPossibleMove(Node parent, ChessBoard chessBoard) {
+		ArrayList<Node> possible = new ArrayList<Node>();
+		
+		for(int i=0; i<chessBoard.maxRow; i++) {
+			for(int j=0; j<chessBoard.maxCol; j++) {
+				if(chessBoard.getBoardStatus(i,j) == ChessType.EMPTY) {
+					possible.add(new Node(parent, chessBoard, i, j));
+				}
+			}
+		}
+		
+		for(Node node : possible) {
+			node.Q = chessBoard.QScore(node.getPoint().x, node.getPoint().y, null);
+		}
+		possible.sort(new Comparator<Node>(){
+			@Override
+			public int compare(Node o1, Node o2) {
+				return o1.Q > o2.Q ? 0 : 1;
+			}
+		});
+		while(possible.size() > SIMU_RANGE) {
+			possible.remove(possible.size()-1);
+		}
+		
+		return possible;
+	}
+	
     /**
      * Simulate 
      * 
@@ -232,7 +283,7 @@ public class MCTSThread extends Thread{
      * @param chessboard
      * @return ChessType: who wins?
      */
-	private ChessType simulate(Node node, ChessBoard chessBoard) {
+	private ChessType simulate_random(Node node, ChessBoard chessBoard) {
 		ChessType chessType = node.getChesstype();
 		ChessType winType = ChessType.EMPTY;
 		

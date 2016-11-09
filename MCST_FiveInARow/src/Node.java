@@ -10,6 +10,10 @@ public class Node {
 	//The conponent's step on the previous round.
 	private Point point;
 	
+	// simuLayer is used to count how deep the node is in simulation
+	public int simuLayer = 0;
+	public int Q;
+	
 	public Node(Node parent,ChessBoard chessBoard,  int r, int c) {
 		this.parent = parent;
 		this.children = new ArrayList<Node>();
@@ -52,8 +56,8 @@ public class Node {
 		return this.parent;
 	}
 	
-	public Value getValue() {
-		return this.value;
+	public void setValue(Value v) {
+		this.value = v;
 	}
 	
 	
@@ -80,4 +84,9 @@ public class Node {
 
     	
     }
+
+	public Value getValue() {
+		// TODO Auto-generated method stub
+		return this.value;
+	}
 }
