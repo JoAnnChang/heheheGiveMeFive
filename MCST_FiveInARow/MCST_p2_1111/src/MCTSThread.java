@@ -1,13 +1,19 @@
 import java.awt.Point;
 import java.lang.reflect.Array;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.border.EmptyBorder;
+
 
 
 public class MCTSThread extends Thread{
@@ -15,7 +21,9 @@ public class MCTSThread extends Thread{
 	private ChessBoard chessBoard;
 	private ChessType winType;
 	
-	private static final int SEARCH_RANGE = 1;
+	private static int SEARCH_RANGE = 2;
+	private static int timeLimit = 10;
+//	private int timer = 100000;
 	
 	public MCTSThread(ChessBoard cb, Node currentNode) {
 		super();
@@ -30,9 +38,25 @@ public class MCTSThread extends Thread{
 		//Add timer count, when come to 10, stops
 		
 		//Temporary timer, do 1000 times
-		int timer = 50000;
-		System.out.println(root.getChesstype());
-		while(timer-- > 0) {
+//		int timer = 50000;
+		
+		Timer timer = new Timer(true);
+		TimeCount timeCount = new TimeCount();
+		timer.schedule(new TimeCount(), 0, 1000);
+		int start = timeCount.getTimeCount();
+		if(root.getPoint().x == 7 && root.getPoint().y==7){
+			SEARCH_RANGE = 1;
+		}
+	
+		int count =0;
+		
+		while(true) { 
+			count++;
+			int end = timeCount.getTimeCount();
+			if(end - start == timeLimit){
+				start = end;
+				break;
+			}
 			
 			//We will use the chessBoard many and many times,
 			//and every time we shoud assure it would be the original one
@@ -47,11 +71,10 @@ public class MCTSThread extends Thread{
 			winType = ChessType.EMPTY;
 			//Always Start from the root
 			Node selected = select(root, chessBoard_tmp);
-			
-//			if(winType != ChessType.EMPTY){
-//				backpropagate(selected, root.getChesstype()==winType);
-//				continue;
-//			}
+			if(winType != ChessType.EMPTY){
+				backpropagate(selected, root.getChesstype()==winType);
+				continue;
+			}
 			
 			//-----------------------------//
 			//------START expand-----------//
@@ -65,7 +88,13 @@ public class MCTSThread extends Thread{
 			//------START simulate---------//
 			//-----------------------------//
 			//Select N child nodes to simulate, but here we only do once for testing.
-			Node secondSelected = select(selected, chessBoard_tmp);
+//			Node secondSelected = select(selected, chessBoard_tmp);
+			Node secondSelected = childNodes.get((new Random()).nextInt(childNodes.size()));
+			if(winType != ChessType.EMPTY){
+				backpropagate(secondSelected, root.getChesstype()==winType);
+				continue;
+			}
+			
 			//pass the second Selected node, return a result that the node will win or not
 			ChessType result = simulate(secondSelected, chessBoard_tmp);
 
@@ -85,26 +114,22 @@ public class MCTSThread extends Thread{
 //				backpropagate(n);	
 //			}
 			
-			
-			
 		}
-		
+		System.out.println("while loop go "+count+" times");
 		printTree(root);
-		
-		
+		timer.cancel();
 		Node returnNode = getBest();
 		return returnNode.getPoint();
 	}
 	
 	public void printTree(Node root){
-		System.out.println(root.getChildren().size());
+		System.out.println("root childern size:" + root.getChildren().size());
 		ArrayList<Node> children = root.getChildren();
 		for(Node n: children){
 			System.out.printf("(%f/%d)/%d  ", n.getNumOfWin(), n.getNumOfSelected(), n.getChildren().size());
 		}
+		System.out.println("\nDepth: "+maxCount);
 		ArrayList<Node> list = new ArrayList<Node>();
-		System.out.print("\n4rdNodeSize: ");
-		System.out.println(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size());
 		
 		
 	}
@@ -125,7 +150,7 @@ public class MCTSThread extends Thread{
 			}
 		}
 		
-		System.out.println("the best of numOfSelected: "+String.valueOf(sel.getNumOfSelected()));
+		System.out.printf("(%f/%d)/%d  ", sel.getNumOfWin(), sel.getNumOfSelected(), sel.getChildren().size());
 		return sel;
 	}
 	
@@ -138,10 +163,10 @@ public class MCTSThread extends Thread{
      * @param the chessBoard  
      * @return Node : the child with the best potential
      */
-	int c = 1;
+	int maxCount = 0;
 	
 	private Node select(Node currentNode, ChessBoard chessBoard) {
-		c++;
+		
 		
 
 		Node selected = currentNode;
@@ -175,9 +200,9 @@ public class MCTSThread extends Thread{
 			//change the type
 			currentChessType = ChessType.nextType(currentChessType);
 		}
-//		if(c%2 == 0)
-//			System.out.println("--- "+count);
-
+		if(count > maxCount){
+			maxCount = count;
+		}
 		return selected;
 	}
 	
@@ -199,9 +224,10 @@ public class MCTSThread extends Thread{
 		
 		//the type of the node
 		ChessType currentChessType = parentNode.getChesstype();
-		
+		currentChessType = ChessType.nextType(currentChessType);
 
 		//turn the hash set to the arraylist
+		int count = 0;
 		for(Point point : legalMoves_list){
 //			ChessBoard cb_tmp = chessBoard.clone();
 //			cb_tmp.move(point, currentChessType);
@@ -210,7 +236,8 @@ public class MCTSThread extends Thread{
 			//parent node add the child
 			legalChildNodes.add(newChildNode);
 			
-			currentChessType = ChessType.nextType(currentChessType);
+//!!!!!!!!!!!BUG			
+//			currentChessType = ChessType.nextType(currentChessType);
 		}
 
 		//add all the new child nodes to the paren node
@@ -239,18 +266,47 @@ public class MCTSThread extends Thread{
 		
 	}
 	private ArrayList<Point> searchTheRange(ChessBoard chessBoard, int r, int c){
-		int minR = Math.max(0, r-SEARCH_RANGE);
-		int maxR = Math.min(chessBoard.maxRow-1, r+SEARCH_RANGE);
-		int minC = Math.max(0, c-SEARCH_RANGE);
-		int maxC = Math.min(chessBoard.maxRow-1, c+SEARCH_RANGE);
+		return searchTheRange(chessBoard, r, c, SEARCH_RANGE);
+	}
+	private ArrayList<Point> searchTheRange(ChessBoard chessBoard, int r, int c, int search_range){
+		int minR = Math.max(0, r-search_range);
+		int maxR = Math.min(chessBoard.maxRow-1, r+search_range);
+		int minC = Math.max(0, c-search_range);
+		int maxC = Math.min(chessBoard.maxRow-1, c+search_range);
 		ArrayList<Point> aroundList = new ArrayList<Point>();
 		
+//		for(int i=minR; i<=maxR; i++){
+//			for(int j=minC; j<=maxC; j++){
+//				if(chessBoard.getBoardStatus(i, j) == ChessType.EMPTY){
+//					aroundList.add(new Point(i,j));
+//				}
+//			}
+//		}
 		for(int i=minR; i<=maxR; i++){
-			for(int j=minC; j<=maxC; j++){
+			if(chessBoard.getBoardStatus(i, c) == ChessType.EMPTY){
+				aroundList.add(new Point(i,c));
+			}
+		}
+		for(int j=minC; j<=maxC; j++){
+			if(chessBoard.getBoardStatus(r, j) == ChessType.EMPTY){
+				aroundList.add(new Point(r,j));
+			}
+		}
+		for(int i=r-search_range, j=c-search_range; i<=r+search_range && j<=c+search_range; i++,j++){
+			if(i>=0 && i<15 && j>=0 && j<15){
 				if(chessBoard.getBoardStatus(i, j) == ChessType.EMPTY){
 					aroundList.add(new Point(i,j));
 				}
 			}
+
+		}
+		for(int i=r-search_range, j=c+search_range; i<=r+search_range && j>=c-search_range; i++,j--){
+			if(i>=0 && i<15 && j>=0 && j<15){
+				if(chessBoard.getBoardStatus(i, j) == ChessType.EMPTY){
+					aroundList.add(new Point(i,j));
+				}
+			}
+
 		}
 		
 		return aroundList;
@@ -285,7 +341,7 @@ public class MCTSThread extends Thread{
 			for(int j=0; j<chessBoard.maxCol; j++){
 				if(chessBoard.getBoardStatus(i, j) != ChessType.EMPTY){
 					//to prevent repeat
-					legalMoves_set.addAll(searchTheRange(chessBoard, i, j));
+					legalMoves_set.addAll(searchTheRange(chessBoard, i, j, 1));
 				}
 			}
 		}
@@ -299,7 +355,6 @@ public class MCTSThread extends Thread{
 			int size = legalMoves_list.size();
 			int randomIndex = random.nextInt(size);
 			Point chosePoint = legalMoves_list.get(randomIndex);
-		    choseList.add(chosePoint);
 		    
 		    if (chessBoard.move(chosePoint, chessType) == 1) {
 				winType = chessType;

@@ -83,6 +83,8 @@ public class Node {
     	if(winAdd){
     		this.value.addWin(1);
     	}
+    	else 
+    		this.value.addWin(0);
    		
 
     	
