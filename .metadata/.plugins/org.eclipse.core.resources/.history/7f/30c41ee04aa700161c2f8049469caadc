@@ -11,8 +11,6 @@ public class MyScore {
 	int d_h_four;
 	int a_five;
 	int d_five;
-	final static double aRatio = 1.2;
-	final static double dRatio = 1.0;
 
 	public MyScore() {
 		a_two = 0;
@@ -52,8 +50,4 @@ public class MyScore {
 		int neg = d_five*10000 + d_h_four*5000 + d_four*1000 + d_h_three*500 + d_three*100 + d_two*10;
 		return neg;
 	}
-	public double getScore() {
-		return aRatio*getAttackScore()-dRatio*getDefenseScore();
-	}
-	
 }

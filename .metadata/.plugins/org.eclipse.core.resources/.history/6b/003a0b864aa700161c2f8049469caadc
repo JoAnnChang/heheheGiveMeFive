@@ -91,16 +91,20 @@ public class ChessBoard implements Cloneable {
 		return move(point.x, point.y, chessType);
 
 	}
-	
-	/*Show score when put a player chess on (r, c)*/
-	public MyScore QScore(int r, int c, ChessType player) {	
+
+	// public void move(int r, int c) {
+	// assert board[r][c] == ChessType.EMPTY; //make sure (r, c) is empty
+	// board[r][c] = player; // Record this move.
+	// player = ChessType.nextType(player); // Flip players
+	// moves++; // Increment number of moves.
+	// }
+
+	public MyScore QScore(int r, int c, ChessType player) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
-		board[r][c] = player; //put player on the position to make
-		MyScore tmp = QScore(this.board, player);
-		board[r][c] = ChessType.EMPTY;
-		return tmp;
+		// board[r][c] = player; //put player on the position to make
+		// calculation
+		return QScore(this.board, player);
 	}
-	/*count score with parameters board and player*/
 	public static MyScore QScore(ChessType[][] board2, ChessType player) {
 		MyScore tmpScore;
 		MyScore score = new MyScore();
