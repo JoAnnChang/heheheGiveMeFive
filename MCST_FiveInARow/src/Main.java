@@ -55,7 +55,7 @@ public class Main {
 //				showChessboard(chessBoard);
 //				break;
 //			}
-
+//
 			Point p = new Point(7, 7);
 			if(cnt == 0){
 				String r = Alpha.getAlpha(p.x);
@@ -83,23 +83,37 @@ public class Main {
 			showChessboard(chessBoard);
 
 			
+			Scanner scanner = new Scanner(System.in);
+			String input = scanner.nextLine();
 			
-			// mcts thread
-			ChessBoard chessBoard_tmp = chessBoard.clone();
-			mctsThread = new MCTSThread(chessBoard_tmp, new Node(null, ChessType.WHITE, p));
-			Point point = mctsThread.next();
-
-			String r2 = Alpha.getAlpha(point.x);
-			int c2 = point.y;
-			System.out.println("WHITE: "+r2+", "+c2);
+			String[] text = input.split(" ");
+			int r = Alpha.valueOf(text[0]).ordinal();
+			int c = Integer.valueOf(text[1]);
+			p = new Point(r, c);
 			
-//			chessboard2.setChess(point, com.zhixiangli.smartgomoku.model.ChessType.WHITE);
-			if(chessBoard.move(point, ChessType.WHITE) == 1){
-				w++;
+			if(chessBoard.move(p, ChessType.WHITE) == 1){
 				System.out.println("WHITE WIN");
 				showChessboard(chessBoard);
 				break;
 			}
+
+			
+			// mcts thread
+//			ChessBoard chessBoard_tmp = chessBoard.clone();
+//			mctsThread = new MCTSThread(chessBoard_tmp, new Node(null, ChessType.WHITE, p));
+//			Point point = mctsThread.next();
+//
+//			String r2 = Alpha.getAlpha(point.x);
+//			int c2 = point.y;
+//			System.out.println("WHITE: "+r2+", "+c2);
+//			
+////			chessboard2.setChess(point, com.zhixiangli.smartgomoku.model.ChessType.WHITE);
+//			if(chessBoard.move(point, ChessType.WHITE) == 1){
+//				w++;
+//				System.out.println("WHITE WIN");
+//				showChessboard(chessBoard);
+//				break;
+//			}
 			showChessboard(chessBoard);
 		
 		}

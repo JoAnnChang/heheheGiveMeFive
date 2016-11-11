@@ -1,4 +1,5 @@
 import java.awt.Point;
+import java.util.Scanner;
 
 import javax.net.ssl.ExtendedSSLSession;
 
@@ -95,7 +96,32 @@ public class ChessBoard implements Cloneable{
     
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
-    	chessBoard.moveQ(new Point(7, 7), ChessType.BLACK).getStatus();
+//    	showScore(new Point(7, 7), ChessType.BLACK);
+
+    	ChessType chessType = ChessType.BLACK;
+		Scanner scanner = new Scanner(System.in);
+		Point old = new Point(0, 0);
+		while(true){
+			String input = scanner.nextLine();
+			if(input.equals("back")){
+				chessType = chessType.nextType(chessType);
+				chessBoard.moveQ(old, ChessType.EMPTY);
+				Main.showChessboard(chessBoard);
+				continue;
+			}
+			
+			String[] text = input.split(" ");
+			int r = Main.Alpha.valueOf(text[0]).ordinal();
+			int c = Integer.valueOf(text[1]);
+			old = new Point(r, c);
+			
+	    	MyScore myScore = chessBoard.moveQ(old, chessType);
+	    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
+	    	Main.showChessboard(chessBoard);
+	    		
+	    	chessType = ChessType.nextType(chessType);
+		}
+		
     	
     	
     }
@@ -107,7 +133,7 @@ public class ChessBoard implements Cloneable{
     public MyScore moveQ(int r, int c, ChessType chessType) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
 		board[r][c] = chessType; // Record this move.
-		return QScore(r, c, chessType);
+		return QScore(this.board, chessType);
 
 	}
 
@@ -203,11 +229,22 @@ public class ChessBoard implements Cloneable{
 		} else if (posCount == 4) {
 			if (r - dr * 1 > 0 && c - dc * 1 > 0) {
 				if (b[r - dr * 1][c - dc * 1] == ChessType.EMPTY) {
-					tmpScore.a_h_four++;
+					if(b[r][c]==player && b[r+dr*4][c+dc*4]==player){
+						tmpScore.a_four++;
+					}
+					else{
+						tmpScore.a_h_four++;
+					}
+					
 				}
 			} else if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
 				if (b[r + dr * 5][c + dc * 5] == ChessType.EMPTY) {
-					tmpScore.a_h_four++;
+					if(b[r][c]==player && b[r+dr*4][c+dc*4]==player){
+						tmpScore.a_four++;
+					}
+					else{
+						tmpScore.a_h_four++;
+					}
 				}
 			} else {
 				tmpScore.a_four++;
@@ -234,11 +271,21 @@ public class ChessBoard implements Cloneable{
 		} else if (negCount == 4) {
 			if (r - dr * 1 > 0 && c - dc * 1 > 0) {
 				if (b[r - dr * 1][c - dc * 1] == ChessType.EMPTY) {
-					tmpScore.d_h_four++;
+					if(b[r][c]==ChessType.nextType(player) && b[r+dr*4][c+dc*4]==ChessType.nextType(player)){
+						tmpScore.d_four++;
+					}
+					else{
+						tmpScore.d_h_four++;
+					}
 				}
 			} else if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
 				if (b[r + dr * 5][c + dc * 5] == ChessType.EMPTY) {
-					tmpScore.d_h_four++;
+					if(b[r][c]==ChessType.nextType(player) && b[r+dr*4][c+dc*4]==ChessType.nextType(player)){
+						tmpScore.d_four++;
+					}
+					else{
+						tmpScore.d_h_four++;
+					}
 				}
 			} else {
 				tmpScore.d_four++;

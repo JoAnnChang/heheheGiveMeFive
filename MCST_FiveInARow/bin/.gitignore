@@ -1,4 +1,9 @@
-/TEST/
-/MyScore.class
+/ChessBoard.class
+/ChessType.class
+/MCTSThread.class
 /Main$Alpha.class
+/Main.class
+/MyScore.class
+/Node.class
 /TimeCount.class
+/Value.class
