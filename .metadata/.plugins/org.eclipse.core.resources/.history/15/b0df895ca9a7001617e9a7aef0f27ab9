@@ -104,7 +104,8 @@ public class ChessBoard implements Cloneable{
     
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
-    	chessBoard.moveQ(new Point(7, 7), ChessType.BLACK).getStatus();
+    	chessBoard.moveQ(new Point(7, 7), ChessType.BLACK);
+    	
     	
     	
     }
@@ -116,9 +117,7 @@ public class ChessBoard implements Cloneable{
     public MyScore moveQ(int r, int c, ChessType chessType) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
 		board[r][c] = chessType; // Record this move.
-		System.out.print(r);
-		System.out.println(c);
-		System.out.println(chessType);
+		System.out.println(r);
 		return QScore(r, c, chessType);
 
 	}
@@ -172,21 +171,16 @@ public class ChessBoard implements Cloneable{
 		return score;
 	}
 
-	private static MyScore countScore(int r, int dr, int c, int dc, ChessType player, ChessType[][] b) {
+	private static MyScore countScore(int r, int c, int dr, int dc, ChessType player, ChessType[][] b) {
 		MyScore tmpScore = new MyScore();
 		int posCount = 1;
 		int negCount = 1;
 		int posFlag = 1;
 		int negFlag = 1;
 		/* count same ChessType */
-		System.out.println("r="+r+" c="+c+" dr="+dr+" dc="+dc);
 		for (int i = 1; i < 5; i++) {
-			System.out.print(r + dr * i+" ");
-			System.out.println(c + dc * i);
-			
 			if (b[r + dr * i][c + dc * i] != ChessType.nextType(player)
 					&& posFlag == 1) {
-				
 				if (b[r + dr * i][c + dc * i] == player)
 					posCount++;
 			} else {

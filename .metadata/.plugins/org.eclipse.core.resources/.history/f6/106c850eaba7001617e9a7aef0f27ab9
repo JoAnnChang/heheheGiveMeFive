@@ -56,19 +56,4 @@ public class MyScore {
 		return aRatio*getAttackScore()-dRatio*getDefenseScore();
 	}
 	
-	public void getStatus() {
-		System.out.println("a_two=" + a_two);
-		System.out.println("d_two=" + d_two);
-		System.out.println("a_three=" + a_three);
-		System.out.println("d_three=" + d_three);
-		System.out.println("a_four=" + a_four);
-		System.out.println("d_four=" + d_four);
-		System.out.println("a_h_three=" + a_h_three);
-		System.out.println("d_h_three=" + d_h_three);
-		System.out.println("a_h_four=" + a_h_four);
-		System.out.println("d_h_four=" + d_h_four);
-		System.out.println("a_five=" + a_five);
-		System.out.println("d_five=" + d_five);
-	}
-	
 }

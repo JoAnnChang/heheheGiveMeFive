@@ -104,7 +104,8 @@ public class ChessBoard implements Cloneable{
     
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
-    	chessBoard.moveQ(new Point(7, 7), ChessType.BLACK).getStatus();
+    	chessBoard.moveQ(new Point(7, 7), ChessType.BLACK);
+    	
     	
     	
     }
@@ -172,7 +173,7 @@ public class ChessBoard implements Cloneable{
 		return score;
 	}
 
-	private static MyScore countScore(int r, int dr, int c, int dc, ChessType player, ChessType[][] b) {
+	private static MyScore countScore(int r, int c, int dr, int dc, ChessType player, ChessType[][] b) {
 		MyScore tmpScore = new MyScore();
 		int posCount = 1;
 		int negCount = 1;

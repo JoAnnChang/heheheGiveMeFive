@@ -104,7 +104,7 @@ public class ChessBoard implements Cloneable{
     
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
-    	chessBoard.moveQ(new Point(7, 7), ChessType.BLACK).getStatus();
+    	System.out.println(chessBoard.moveQ(new Point(7, 7), ChessType.BLACK).getScore());
     	
     	
     }
