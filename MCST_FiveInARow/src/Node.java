@@ -10,6 +10,9 @@ public class Node {
 	//The conponent's step on the previous round.
 	private Point point;
 	
+	public int simuLayer;
+	public double Q;
+	
 	public Node(Node parent,  ChessType chessType, int r, int c) {
 		this.parent = parent;
 		this.children = new ArrayList<Node>();
@@ -63,6 +66,10 @@ public class Node {
 	
 	public ChessType getChesstype(){
 		return chessType;
+	}
+	
+	public ChessType getNextType(){
+		return ChessType.nextType(this.chessType);
 	}
 	
 	//numOfAllGame is from the parent
