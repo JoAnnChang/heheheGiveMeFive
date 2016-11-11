@@ -13,13 +13,6 @@ public class MyScore {
 	int d_five;
 	final static double aRatio = 1.2;
 	final static double dRatio = 1.0;
-	final static int WIN = 10000;
-	final static int FOUR = 1000;
-	final static int H_FOUR = 2000;
-	final static int THREE = 100;
-	final static int H_THREE = 1000;
-	final static int TWO = 10;
-	final static int LOSE = -1000000;
 
 	public MyScore() {
 		a_two = 0;
@@ -52,42 +45,15 @@ public class MyScore {
 	}
 	
 	public int getAttackScore() {
-		int pos = a_five*WIN + a_h_four*H_FOUR + a_four*FOUR + a_h_three*H_THREE + a_three*THREE + a_two*TWO;
+		int pos = a_five*10000 + a_h_four*5000 + a_four*1000 + a_h_three*500 + a_three*100 + a_two*10;
 		return pos;
 	}
 	public int getDefenseScore() {
-		int neg = d_five*WIN + d_h_four*H_FOUR + d_four*FOUR + d_h_three*H_THREE + d_three*THREE + d_two*TWO;
+		int neg = d_five*10000 + d_h_four*5000 + d_four*1000 + d_h_three*500 + d_three*100 + d_two*10;
 		return neg;
 	}
 	public double getScore() {
-		double a_score = getAttackScore();
-		double d_score = getDefenseScore();
-
-		if(a_h_three>1){
-			a_score -= a_h_three*H_THREE;
-			a_score += WIN*a_h_three/2;
-		}
-		if(d_h_three>1){
-			d_score -= d_h_three*H_THREE;
-			d_score += WIN*d_h_three/2;
-		}
-		if(a_four>1){
-			a_score -= a_four*FOUR;
-			a_score += WIN*a_four/2;
-		}
-		if(d_four>1){
-			d_score -= d_four*FOUR;
-			d_score += WIN*d_four/2;
-		}
-		if(a_four+a_h_three>1){
-			//
-			a_score += WIN;
-		}
-		if(d_four+d_h_three>1){
-			//
-			d_score += WIN;
-		}
-		return aRatio*a_score-dRatio*d_score;
+		return aRatio*getAttackScore()-dRatio*getDefenseScore();
 	}
 	
 	public void getStatus() {

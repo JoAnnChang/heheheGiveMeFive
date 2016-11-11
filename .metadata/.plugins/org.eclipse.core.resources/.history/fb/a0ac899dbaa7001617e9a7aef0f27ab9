@@ -62,29 +62,22 @@ public class MyScore {
 	public double getScore() {
 		double a_score = getAttackScore();
 		double d_score = getDefenseScore();
-
 		if(a_h_three>1){
-			a_score -= a_h_three*H_THREE;
-			a_score += WIN*a_h_three/2;
+			a_score += WIN;
 		}
 		if(d_h_three>1){
-			d_score -= d_h_three*H_THREE;
-			d_score += WIN*d_h_three/2;
+			d_score += WIN;
 		}
 		if(a_four>1){
-			a_score -= a_four*FOUR;
-			a_score += WIN*a_four/2;
+			a_score += WIN;
 		}
 		if(d_four>1){
-			d_score -= d_four*FOUR;
-			d_score += WIN*d_four/2;
+			d_score += WIN;
 		}
 		if(a_four+a_h_three>1){
-			//
 			a_score += WIN;
 		}
 		if(d_four+d_h_three>1){
-			//
 			d_score += WIN;
 		}
 		return aRatio*a_score-dRatio*d_score;

@@ -30,6 +30,15 @@ public class ChessBoard implements Cloneable{
 	public static final int EMPTY   = 0;  // The cell is empty.
 	public static final int BLACK = 1;
     public static final int WHITE = 2;
+    
+    public static final int FIVE = 10000;
+	public static final int MORE_FOUR = 10000;
+	public static final int FOUR = 1000;
+	public static final int H_FOUR = 2000;
+	public static final int THREE = 100;
+	public static final int H_THREE = 1000;
+	public static final int TWO = 10;
+	public static final int LOSE = -1000000;
 	
 	public static int maxRow = 15;
 	public static int maxCol = 15;
@@ -107,6 +116,9 @@ public class ChessBoard implements Cloneable{
     public MyScore moveQ(int r, int c, ChessType chessType) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
 		board[r][c] = chessType; // Record this move.
+		System.out.print(r);
+		System.out.println(c);
+		System.out.println(chessType);
 		return QScore(r, c, chessType);
 
 	}
@@ -167,7 +179,10 @@ public class ChessBoard implements Cloneable{
 		int posFlag = 1;
 		int negFlag = 1;
 		/* count same ChessType */
+		System.out.println("r="+r+" c="+c+" dr="+dr+" dc="+dc);
 		for (int i = 1; i < 5; i++) {
+			//System.out.print(r + dr * i+" ");
+			//System.out.println(c + dc * i);
 			
 			if (b[r + dr * i][c + dc * i] != ChessType.nextType(player)
 					&& posFlag == 1) {

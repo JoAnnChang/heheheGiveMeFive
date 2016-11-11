@@ -107,6 +107,9 @@ public class ChessBoard implements Cloneable{
     public MyScore moveQ(int r, int c, ChessType chessType) {
 		assert board[r][c] == ChessType.EMPTY; // make sure (r, c) is empty
 		board[r][c] = chessType; // Record this move.
+		System.out.print(r);
+		System.out.println(c);
+		System.out.println(chessType);
 		return QScore(r, c, chessType);
 
 	}
