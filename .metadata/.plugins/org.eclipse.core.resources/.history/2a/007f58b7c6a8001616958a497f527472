@@ -118,7 +118,7 @@ public class ChessBoard implements Cloneable{
 	    	MyScore myScore = chessBoard.moveQ(old, chessType);
 	    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 	    	Main.showChessboard(chessBoard);
-	    	//myScore.getStatus();
+	    	myScore.getStatus();
 	    	chessType = ChessType.nextType(chessType);
 		}
 		
@@ -217,7 +217,7 @@ public class ChessBoard implements Cloneable{
 			tmpScore.a_two++;
 		} else if (posCount == 3) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
-				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.a_h_three++;
 				}
 			} else {
@@ -240,7 +240,7 @@ public class ChessBoard implements Cloneable{
 			tmpScore.d_two++;
 		} else if (negCount == 3) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
-				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.d_h_three++;
 				}
 			} else {

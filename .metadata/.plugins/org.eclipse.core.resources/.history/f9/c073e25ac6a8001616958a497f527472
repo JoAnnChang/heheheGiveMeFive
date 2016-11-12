@@ -1,0 +1,108 @@
+public class MyScore {
+	int a_two;
+	int d_two;
+	int a_three;
+	int d_three;
+	int a_four;
+	int d_four;
+	double a_h_three;
+	int d_h_three;
+	int a_h_four;
+	int d_h_four;
+	int a_five;
+	int d_five;
+	final static double aRatio = 1.2;
+	final static double dRatio = 1.0;
+	final static int WIN = 10000;
+	final static int FOUR = 1000;
+	final static int H_FOUR = 2000;
+	final static int THREE = 100;
+	final static int H_THREE = 1000;
+	final static int TWO = 10;
+	final static int LOSE = -1000000;
+
+	public MyScore() {
+		a_two = 0;
+		d_two = 0;
+		a_three = 0;
+		d_three = 0;
+		a_four = 0;
+		d_four = 0;
+		a_h_three = 0;
+		d_h_three = 0;
+		a_h_four = 0;
+		d_h_four = 0;
+		a_five = 0;
+		d_five = 0;
+	}
+	public void refresh(MyScore ms){
+		this.a_five += ms.a_five;
+		this.d_five += ms.d_five;
+		this.a_four += ms.a_four;
+		this.d_four += ms.d_four;
+		this.a_h_four += ms.a_h_four;
+		this.d_h_four += ms.d_h_four;
+		this.a_three += ms.a_three;
+		this.d_three += ms.d_three;
+		this.a_h_three += ms.a_h_three;
+		this.d_h_three += ms.d_h_three;
+		this.a_two += ms.a_two;
+		this.d_two += ms.d_two;
+		return;
+	}
+	
+	public int getAttackScore() {
+		int pos = a_five*WIN + a_h_four*H_FOUR + a_four*FOUR + a_h_three*H_THREE + a_three*THREE + a_two*TWO;
+		return pos;
+	}
+	public int getDefenseScore() {
+		int neg = d_five*WIN + d_h_four*H_FOUR + d_four*FOUR + d_h_three*H_THREE + d_three*THREE + d_two*TWO;
+		return neg;
+	}
+	public double getScore() {
+		double a_score = getAttackScore();
+		double d_score = getDefenseScore();
+
+		if(a_h_three>1){
+			a_score -= a_h_three*H_THREE;
+			a_score += WIN*a_h_three/2;
+		}
+		if(d_h_three>1){
+			d_score -= d_h_three*H_THREE;
+			d_score += WIN*d_h_three/2;
+		}
+		if(a_four>1){
+			a_score -= a_four*FOUR;
+			a_score += WIN*a_four/2;
+		}
+		if(d_four>1){
+			d_score -= d_four*FOUR;
+			d_score += WIN*d_four/2;
+		}
+		if(a_four+a_h_three>1){
+			//
+			a_score += WIN;
+		}
+		if(d_four+d_h_three>1){
+			//
+			d_score += WIN;
+		}
+		return aRatio*a_score-dRatio*d_score;
+	}
+	
+	public void getStatus() {
+		System.out.println("a_two=" + a_two);
+		System.out.println("d_two=" + d_two);
+		System.out.println("a_three=" + a_three);
+		System.out.println("d_three=" + d_three);
+		System.out.println("a_four=" + a_four);
+		System.out.println("d_four=" + d_four);
+		System.out.println("a_h_three=" + a_h_three);
+		System.out.println("d_h_three=" + d_h_three);
+		System.out.println("a_h_four=" + a_h_four);
+		System.out.println("d_h_four=" + d_h_four);
+		System.out.println("a_five=" + a_five);
+		System.out.println("d_five=" + d_five);
+	}
+	
+}

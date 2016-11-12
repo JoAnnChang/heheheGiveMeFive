@@ -118,7 +118,7 @@ public class ChessBoard implements Cloneable{
 	    	MyScore myScore = chessBoard.moveQ(old, chessType);
 	    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 	    	Main.showChessboard(chessBoard);
-	    	//myScore.getStatus();
+	    		
 	    	chessType = ChessType.nextType(chessType);
 		}
 		
@@ -196,6 +196,7 @@ public class ChessBoard implements Cloneable{
 		ChessType empty = ChessType.EMPTY;
 		/* count same ChessType */
 		for (int i = 1; i < 5; i++) {
+			
 			if (b[r + dr * i][c + dc * i] != nextPlayer && posFlag == 1) {
 				if (b[r + dr * i][c + dc * i] == player)
 					posCount++;
@@ -204,7 +205,7 @@ public class ChessBoard implements Cloneable{
 				posCount = 0;
 			}
 			if (b[r + dr * i][c + dc * i] != player && negFlag == 1) {
-				if (b[r + dr * i][c + dc * i] == nextPlayer)
+				if (b[r + dr * i][c + dc * i] == player)
 					negCount++;
 			} else {
 				negFlag = 0;
@@ -217,7 +218,7 @@ public class ChessBoard implements Cloneable{
 			tmpScore.a_two++;
 		} else if (posCount == 3) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
-				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.a_h_three++;
 				}
 			} else {
@@ -240,7 +241,7 @@ public class ChessBoard implements Cloneable{
 			tmpScore.d_two++;
 		} else if (negCount == 3) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
-				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.d_h_three++;
 				}
 			} else {

@@ -132,13 +132,13 @@ public class Main {
 			for(int j=0; j<chessboard.maxCol; j++){
 				//System.out.print(chessboard.getChess(i, j));
 				if(chessboard.getBoardStatus(i, j) == ChessType.BLACK){
-					System.out.print(" X ");
+					System.out.print("¡@¡´¡@");
 				}
 				else if(chessboard.getBoardStatus(i, j) == ChessType.WHITE){
-					System.out.print(" O ");
+					System.out.print("¡@¡³¡@");
 				}
 				else if(chessboard.getBoardStatus(i, j) == ChessType.EMPTY){
-					System.out.print(" _ ");
+					System.out.print("¡@-¡@");
 				}
 			}
 			System.out.println("");
