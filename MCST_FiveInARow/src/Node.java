@@ -10,6 +10,9 @@ public class Node {
 	//The conponent's step on the previous round.
 	private Point point;
 	
+	public int simuLayer;
+	public double Q;
+	
 	public Node(Node parent,  ChessType chessType, int r, int c) {
 		this.parent = parent;
 		this.children = new ArrayList<Node>();
@@ -17,6 +20,7 @@ public class Node {
 		this.value = new Value();
 		this.point = new Point(r, c);
 		
+		this.simuLayer = 0;
 	}
 	
 	public Node(Node parent,  ChessType chessType, Point point) {
@@ -25,6 +29,8 @@ public class Node {
 		this.chessType = chessType;
 		this.value = new Value();
 		this.point = point;
+		
+		this.simuLayer = 0;
 	}
 	
 	

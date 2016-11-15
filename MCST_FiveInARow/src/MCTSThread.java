@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -22,6 +23,8 @@ public class MCTSThread extends Thread{
 	private ChessType winType;
 	
 	private static int SEARCH_RANGE = 2;
+	private static int SIMU_RANGE = 5;
+	private static int MAX_SIMULAYER = 5;
 	private static int timeLimit = 10;
 //	private int timer = 100000;
 	
@@ -314,6 +317,53 @@ public class MCTSThread extends Thread{
 	}
 	private ArrayList<Point> searchTheRange(ChessBoard chessBoard, Point point){
 		return searchTheRange(chessBoard, point.x, point.y);
+	}
+	
+	private void simulate_greedy(Node node, ChessBoard chessBoard, Node root) {
+		if(node.simuLayer < MAX_SIMULAYER && !chessBoard.isWin(chessBoard, node.getChesstype(), node.getPoint())) {
+			node.addAllChild(findPossibleMove(node, chessBoard));
+			
+			for(Node c : node.getChildren()){
+				c.simuLayer++;
+				
+				chessBoard.move(c.getPoint(), c.getChesstype());
+				simulate_greedy(c, chessBoard, root);
+				chessBoard.remove(c.getPoint());
+			}
+		}
+		
+		if(node.getChildren().size() == 0) {
+			chessBoard.remove(node.getPoint());
+			root.Q += chessBoard.QScore(node.getPoint().x, node.getPoint().y, node.getChesstype()).getScore();
+			chessBoard.move(node.getPoint(), node.getChesstype());
+		}
+	}
+	
+	private ArrayList<Node> findPossibleMove(Node parent, ChessBoard chessBoard) {
+		ArrayList<Node> possible = new ArrayList<Node>();
+		
+		for(int i=0; i<chessBoard.maxRow; i++) {
+			for(int j=0; j<chessBoard.maxCol; j++) {
+				if(chessBoard.getBoardStatus(i,j) == ChessType.EMPTY) {
+					possible.add(new Node(parent, ChessType.nextType(parent.getChesstype()), i, j));
+				}
+			}
+		}
+		
+		for(Node node : possible) {
+			node.Q = chessBoard.QScore(node.getPoint().x, node.getPoint().y, node.getChesstype()).getScore();
+		}
+		possible.sort(new Comparator<Node>(){
+			@Override
+			public int compare(Node o1, Node o2) {
+				return o1.Q > o2.Q ? 0 : 1;
+			}
+		});
+		while(possible.size() > SIMU_RANGE) {
+			possible.remove(possible.size()-1);
+		}
+		
+		return possible;
 	}
 	
     /**
