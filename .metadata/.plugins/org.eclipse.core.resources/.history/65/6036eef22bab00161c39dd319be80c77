@@ -98,51 +98,7 @@ public class ChessBoard implements Cloneable{
     public void remove(Point point) {
     	board[point.x][point.y] = ChessType.EMPTY;
     }
-    private static ArrayList<Point> searchTheRange(ChessBoard chessBoard, int r, int c, int search_range){
-		int minR = Math.max(0, r-search_range);
-		int maxR = Math.min(chessBoard.maxRow-1, r+search_range);
-		int minC = Math.max(0, c-search_range);
-		int maxC = Math.min(chessBoard.maxRow-1, c+search_range);
-		ArrayList<Point> aroundList = new ArrayList<Point>();
-		for(int i=minR; i<=maxR; i++){
-			for(int j=minC; j<=maxC; j++){
-				if(chessBoard.getBoardStatus(i, j) == ChessType.EMPTY){
-					aroundList.add(new Point(i,j));
-				}
-			}
-		}
-		
-		return aroundList;
-		
-	}
     
-    public static Point next(ChessBoard chessBoard, ChessType chessType){
-    	Point maxPoint = new Point(0, 0);
-    	double maxQ = -100000;
-    	HashSet<Point> legalMove_set = new HashSet<Point>();
-    	ArrayList<Point> legalMove_list;
-    	for(int i=0; i<chessBoard.maxCol; i++){
-    		for(int j=0; j<chessBoard.maxRow; j++){
-    			if(chessBoard.getBoardStatus(i, j) != ChessType.EMPTY){
-    				legalMove_set.addAll(ChessBoard.searchTheRange(chessBoard, i, j, 2));
-    			}
-    		}
-    	}
-    	legalMove_list = new ArrayList<Point>(legalMove_set);
-    	
-    	for(Point p: legalMove_set){
-    		double score_tmp = chessBoard.moveQ(p, chessType).getScore();
-    		
-    		if(Double.compare(score_tmp, maxQ) == 1){
-    			maxPoint = p;
-    			maxQ = score_tmp;
-    		}
-    		chessBoard.moveQ(p, ChessType.EMPTY);
-    	}
-    	
-    	
-    	return maxPoint;
-    }
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
 //    	showScore(new Point(7, 7), ChessType.BLACK);
@@ -150,24 +106,22 @@ public class ChessBoard implements Cloneable{
     	ChessType chessType = ChessType.BLACK;
 		Scanner scanner = new Scanner(System.in);
 		Point old = new Point(0, 0);
-		Point old2 = new Point(0, 0);
-		while(true){			
-			if(chessType == ChessType.WHITE){
-				old2 = ChessBoard.next(chessBoard, chessType);
-				System.out.println(old2);
-				MyScore myScore = chessBoard.moveQ(old2, chessType);
-		    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
-		    	Main.showChessboard(chessBoard);
-//		    	myScore.getStatus();
-		    	chessType = ChessType.nextType(chessType);
-		    	continue;
-			}
+		while(true){
+			
 			String input = scanner.nextLine();
 			if(input.equals("back")){
-				chessBoard.moveQ(old2, ChessType.EMPTY);
+				chessType = chessType.nextType(chessType);
 				chessBoard.moveQ(old, ChessType.EMPTY);
 				Main.showChessboard(chessBoard);
 				continue;
+			}
+			if(chessType == ChessType.WHITE){
+				Point point = ChessBoard.next(chessBoard, chessType);
+				MyScore myScore = chessBoard.moveQ(point, chessType);
+	    		System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
+	    		Main.showChessboard(chessBoard);
+	    		chessType = ChessType.nextType(chessType);
+	    		continue;
 			}
 			
 			String[] text = input.split(" ");
@@ -213,7 +167,7 @@ public class ChessBoard implements Cloneable{
 	}
 	/*count score with parameters board and player*/
 	public static MyScore QScore(ChessType[][] board2, ChessType player) {
-		MyScore tmpScore = new MyScore();
+		MyScore tmpScore;
 		MyScore score = new MyScore();
 		for (int row = 0; row < maxRow; row++) {
 			for (int col = 0; col < maxCol; col++) {
@@ -277,14 +231,15 @@ public class ChessBoard implements Cloneable{
 			tmpScore.a_two++;
 //			System.out.println("a_two at : ("+r+", "+c+")");
 		} else if (posCount == 3) {
-			if (b[r][c]==player && r-dr>0 && c-dc>0 &&  
-					b[r-dr][c-dc]==empty && b[r+dr*4][c+dc*4]==empty) {
-				tmpScore.a_h_three++;
-				tmpScore.a_three--;
-				if(b[r+dr*3][c+dc*3]==empty) {
-					tmpScore.a_three--;
+			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+					tmpScore.a_h_three++;
+//					System.out.println("a_h_three at : ("+r+", "+c+")");
 				}
-				System.out.println("a_h_three at : ("+r+", "+c+")");
+				else{
+					tmpScore.a_three++;
+//					System.out.println("a_three at : ("+r+", "+c+")");
+				}
 			} else {
 				tmpScore.a_three++;
 //				System.out.println("a_three at : ("+r+", "+c+")");
@@ -305,7 +260,7 @@ public class ChessBoard implements Cloneable{
 			}
 		} else if (posCount == 5) {
 			tmpScore.a_five++;
-			System.out.println("a_five at : ("+r+", "+c+")");
+//			System.out.println("a_five at : ("+r+", "+c+")");
 		}
 
 		/* count negScore */
@@ -313,14 +268,15 @@ public class ChessBoard implements Cloneable{
 			tmpScore.d_two++;
 //			System.out.println("d_two at : ("+r+", "+c+")");
 		} else if (negCount == 3) {
-			if (b[r][c]==nextPlayer && r-dr>0 && c-dc>0 &&  
-					b[r-dr][c-dc]==empty && b[r+dr*4][c+dc*4]==empty) {
-				tmpScore.d_h_three++;
-				tmpScore.d_three--;
-				if(b[r+dr*3][c+dc*3]==empty) {
-					tmpScore.d_three--;
+			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+					tmpScore.d_h_three++;
+//					System.out.println("d_h_three at : ("+r+", "+c+")");
 				}
-//				System.out.println("d_h_three at : ("+r+", "+c+")");
+				else{
+					tmpScore.d_three++;
+//					System.out.println("d_three at : ("+r+", "+c+")");
+				}
 			} else {
 				tmpScore.d_three++;
 //				System.out.println("d_three at : ("+r+", "+c+")");
@@ -341,7 +297,7 @@ public class ChessBoard implements Cloneable{
 			}
 		} else if (negCount == 5) {
 			tmpScore.d_five++;
-			System.out.println("d_five at : ("+r+", "+c+")");
+//			System.out.println("d_five at : ("+r+", "+c+")");
 		}
 
 		return tmpScore;
@@ -420,5 +376,51 @@ public class ChessBoard implements Cloneable{
 	    }
 	}
 	return clonedChessboard;
+    }
+    
+    private static ArrayList<Point> searchTheRange(ChessBoard chessBoard, int r, int c, int search_range){
+		int minR = Math.max(0, r-search_range);
+		int maxR = Math.min(chessBoard.maxRow-1, r+search_range);
+		int minC = Math.max(0, c-search_range);
+		int maxC = Math.min(chessBoard.maxRow-1, c+search_range);
+		ArrayList<Point> aroundList = new ArrayList<Point>();
+		for(int i=minR; i<=maxR; i++){
+			for(int j=minC; j<=maxC; j++){
+				if(chessBoard.getBoardStatus(i, j) == ChessType.EMPTY){
+					aroundList.add(new Point(i,j));
+				}
+			}
+		}
+		
+		return aroundList;
+		
+	}
+    
+    public static Point next(ChessBoard chessBoard, ChessType chessType){
+    	Point maxPoint = new Point(0, 0);
+    	double maxQ = -100000;
+    	HashSet<Point> legalMove_set = new HashSet<Point>();
+    	ArrayList<Point> legalMove_list;
+    	for(int i=0; i<chessBoard.maxCol; i++){
+    		for(int j=0; j<chessBoard.maxRow; j++){
+    			if(chessBoard.getBoardStatus(i, j) != ChessType.EMPTY){
+    				legalMove_set.addAll(ChessBoard.searchTheRange(chessBoard, i, j, 2));
+    			}
+    		}
+    	}
+    	legalMove_list = new ArrayList<Point>(legalMove_set);
+    	
+    	for(Point p: legalMove_set){
+    		double score_tmp = chessBoard.moveQ(p, chessType).getScore();
+    		
+    		if(Double.compare(score_tmp, maxQ) == 1){
+    			maxPoint = p;
+    			maxQ = score_tmp;
+    		}
+    		chessBoard.moveQ(p, ChessType.EMPTY);
+    	}
+    	
+    	
+    	return maxPoint;
     }
 }

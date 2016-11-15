@@ -20,7 +20,6 @@ public class MyScore {
 	final static int H_THREE = 1000;//200;
 	final static int TWO = 10;
 	final static int LOSE = -1000000;
-	final static int ALMOST_WIN = 1000000;
 
 	public MyScore() {
 		a_two = 0;
@@ -57,7 +56,7 @@ public class MyScore {
 		return pos;
 	}
 	public int getDefenseScore() {
-		int neg = d_five*WIN + d_h_four*ALMOST_WIN + d_four*ALMOST_WIN + d_h_three*ALMOST_WIN + d_three*THREE + d_two*TWO;
+		int neg = d_five*WIN + d_h_four*WIN + d_four*WIN + d_h_three*WIN + d_three*THREE + d_two*TWO;
 		return neg;
 	}
 	public double getScore() {

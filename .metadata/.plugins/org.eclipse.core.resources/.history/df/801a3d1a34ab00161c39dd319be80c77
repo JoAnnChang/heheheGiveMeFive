@@ -158,7 +158,7 @@ public class ChessBoard implements Cloneable{
 				MyScore myScore = chessBoard.moveQ(old2, chessType);
 		    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 		    	Main.showChessboard(chessBoard);
-//		    	myScore.getStatus();
+		    	myScore.getStatus();
 		    	chessType = ChessType.nextType(chessType);
 		    	continue;
 			}
@@ -178,7 +178,7 @@ public class ChessBoard implements Cloneable{
 	    	MyScore myScore = chessBoard.moveQ(old, chessType);
 	    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 	    	Main.showChessboard(chessBoard);
-//	    	myScore.getStatus();
+	    	myScore.getStatus();
 	    	chessType = ChessType.nextType(chessType);
 		}
 		
@@ -277,14 +277,15 @@ public class ChessBoard implements Cloneable{
 			tmpScore.a_two++;
 //			System.out.println("a_two at : ("+r+", "+c+")");
 		} else if (posCount == 3) {
-			if (b[r][c]==player && r-dr>0 && c-dc>0 &&  
-					b[r-dr][c-dc]==empty && b[r+dr*4][c+dc*4]==empty) {
-				tmpScore.a_h_three++;
-				tmpScore.a_three--;
-				if(b[r+dr*3][c+dc*3]==empty) {
-					tmpScore.a_three--;
+			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+					tmpScore.a_h_three++;
+//					System.out.println("a_h_three at : ("+r+", "+c+")");
 				}
-				System.out.println("a_h_three at : ("+r+", "+c+")");
+				else{
+					tmpScore.a_three++;
+//					System.out.println("a_three at : ("+r+", "+c+")");
+				}
 			} else {
 				tmpScore.a_three++;
 //				System.out.println("a_three at : ("+r+", "+c+")");
@@ -305,7 +306,7 @@ public class ChessBoard implements Cloneable{
 			}
 		} else if (posCount == 5) {
 			tmpScore.a_five++;
-			System.out.println("a_five at : ("+r+", "+c+")");
+//			System.out.println("a_five at : ("+r+", "+c+")");
 		}
 
 		/* count negScore */
@@ -313,14 +314,15 @@ public class ChessBoard implements Cloneable{
 			tmpScore.d_two++;
 //			System.out.println("d_two at : ("+r+", "+c+")");
 		} else if (negCount == 3) {
-			if (b[r][c]==nextPlayer && r-dr>0 && c-dc>0 &&  
-					b[r-dr][c-dc]==empty && b[r+dr*4][c+dc*4]==empty) {
-				tmpScore.d_h_three++;
-				tmpScore.d_three--;
-				if(b[r+dr*3][c+dc*3]==empty) {
-					tmpScore.d_three--;
+			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
+				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
+					tmpScore.d_h_three++;
+//					System.out.println("d_h_three at : ("+r+", "+c+")");
 				}
-//				System.out.println("d_h_three at : ("+r+", "+c+")");
+				else{
+					tmpScore.d_three++;
+//					System.out.println("d_three at : ("+r+", "+c+")");
+				}
 			} else {
 				tmpScore.d_three++;
 //				System.out.println("d_three at : ("+r+", "+c+")");
@@ -341,7 +343,7 @@ public class ChessBoard implements Cloneable{
 			}
 		} else if (negCount == 5) {
 			tmpScore.d_five++;
-			System.out.println("d_five at : ("+r+", "+c+")");
+//			System.out.println("d_five at : ("+r+", "+c+")");
 		}
 
 		return tmpScore;
