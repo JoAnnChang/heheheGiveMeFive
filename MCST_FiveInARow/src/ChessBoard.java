@@ -1,4 +1,6 @@
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import javax.net.ssl.ExtendedSSLSession;
@@ -96,7 +98,51 @@ public class ChessBoard implements Cloneable{
     public void remove(Point point) {
     	board[point.x][point.y] = ChessType.EMPTY;
     }
+    private static ArrayList<Point> searchTheRange(ChessBoard chessBoard, int r, int c, int search_range){
+		int minR = Math.max(0, r-search_range);
+		int maxR = Math.min(chessBoard.maxRow-1, r+search_range);
+		int minC = Math.max(0, c-search_range);
+		int maxC = Math.min(chessBoard.maxRow-1, c+search_range);
+		ArrayList<Point> aroundList = new ArrayList<Point>();
+		for(int i=minR; i<=maxR; i++){
+			for(int j=minC; j<=maxC; j++){
+				if(chessBoard.getBoardStatus(i, j) == ChessType.EMPTY){
+					aroundList.add(new Point(i,j));
+				}
+			}
+		}
+		
+		return aroundList;
+		
+	}
     
+    public static Point next(ChessBoard chessBoard, ChessType chessType){
+    	Point maxPoint = new Point(0, 0);
+    	double maxQ = -100000;
+    	HashSet<Point> legalMove_set = new HashSet<Point>();
+    	ArrayList<Point> legalMove_list;
+    	for(int i=0; i<chessBoard.maxCol; i++){
+    		for(int j=0; j<chessBoard.maxRow; j++){
+    			if(chessBoard.getBoardStatus(i, j) != ChessType.EMPTY){
+    				legalMove_set.addAll(ChessBoard.searchTheRange(chessBoard, i, j, 2));
+    			}
+    		}
+    	}
+    	legalMove_list = new ArrayList<Point>(legalMove_set);
+    	
+    	for(Point p: legalMove_set){
+    		double score_tmp = chessBoard.moveQ(p, chessType).getScore();
+    		
+    		if(Double.compare(score_tmp, maxQ) == 1){
+    			maxPoint = p;
+    			maxQ = score_tmp;
+    		}
+    		chessBoard.moveQ(p, ChessType.EMPTY);
+    	}
+    	
+    	
+    	return maxPoint;
+    }
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
 //    	showScore(new Point(7, 7), ChessType.BLACK);
@@ -104,7 +150,16 @@ public class ChessBoard implements Cloneable{
     	ChessType chessType = ChessType.BLACK;
 		Scanner scanner = new Scanner(System.in);
 		Point old = new Point(0, 0);
-		while(true){
+		while(true){			
+			if(chessType == ChessType.WHITE){
+				Point point = ChessBoard.next(chessBoard, chessType);
+				System.out.println(point);
+				MyScore myScore = chessBoard.moveQ(point, chessType);
+		    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
+		    	Main.showChessboard(chessBoard);
+		    	chessType = ChessType.nextType(chessType);
+		    	continue;
+			}
 			String input = scanner.nextLine();
 			if(input.equals("back")){
 				chessType = chessType.nextType(chessType);

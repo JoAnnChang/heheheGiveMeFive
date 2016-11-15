@@ -1,5 +1,6 @@
 /ChessBoard.class
 /ChessType.class
+/MCTSThread$1.class
 /MCTSThread.class
 /Main$Alpha.class
 /Main.class
@@ -7,4 +8,3 @@
 /Node.class
 /TimeCount.class
 /Value.class
-/MCTSThread$1.class
