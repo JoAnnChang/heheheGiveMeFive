@@ -93,6 +93,9 @@ public class ChessBoard implements Cloneable{
 
     }
     
+    public void remove(Point point) {
+    	board[point.x][point.y] = ChessType.EMPTY;
+    }
     
     public static void main(String[] args){
     	ChessBoard chessBoard = new ChessBoard();
