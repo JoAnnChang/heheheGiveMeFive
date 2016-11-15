@@ -150,11 +150,12 @@ public class ChessBoard implements Cloneable{
     	ChessType chessType = ChessType.BLACK;
 		Scanner scanner = new Scanner(System.in);
 		Point old = new Point(0, 0);
+		Point old2 = new Point(0, 0);
 		while(true){			
 			if(chessType == ChessType.WHITE){
-				Point point = ChessBoard.next(chessBoard, chessType);
-				System.out.println(point);
-				MyScore myScore = chessBoard.moveQ(point, chessType);
+				old2 = ChessBoard.next(chessBoard, chessType);
+				System.out.println(old2);
+				MyScore myScore = chessBoard.moveQ(old2, chessType);
 		    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 		    	Main.showChessboard(chessBoard);
 		    	chessType = ChessType.nextType(chessType);
@@ -162,7 +163,7 @@ public class ChessBoard implements Cloneable{
 			}
 			String input = scanner.nextLine();
 			if(input.equals("back")){
-				chessType = chessType.nextType(chessType);
+				chessBoard.moveQ(old2, ChessType.EMPTY);
 				chessBoard.moveQ(old, ChessType.EMPTY);
 				Main.showChessboard(chessBoard);
 				continue;

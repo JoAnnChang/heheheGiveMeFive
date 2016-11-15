@@ -12,12 +12,12 @@ public class MyScore {
 	int a_five;
 	int d_five;
 	final static double aRatio = 1.0;
-	final static double dRatio = 1.2;
-	final static int WIN = 1000000;
+	final static double dRatio = 1.4;//1.2;
+	final static int WIN = 100000000;//1000000;
 	final static int FOUR = 1000;
-	final static int H_FOUR = 2000;
+	final static int H_FOUR = 100000;//2000;
 	final static int THREE = 100;
-	final static int H_THREE = 200;
+	final static int H_THREE = 1000;//200;
 	final static int TWO = 10;
 	final static int LOSE = -1000000;
 
