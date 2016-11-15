@@ -121,7 +121,7 @@ public class ChessBoard implements Cloneable{
 	    	MyScore myScore = chessBoard.moveQ(old, chessType);
 	    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 	    	Main.showChessboard(chessBoard);
-//	    	myScore.getStatus();
+	    	myScore.getStatus();
 	    	chessType = ChessType.nextType(chessType);
 		}
 		
@@ -218,75 +218,75 @@ public class ChessBoard implements Cloneable{
 		/* count attackScore */
 		if (posCount == 2) {
 			tmpScore.a_two++;
-//			System.out.println("a_two at : ("+r+", "+c+")");
+			System.out.println("a_two at : ("+r+", "+c+")");
 		} else if (posCount == 3) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
 				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
 					tmpScore.a_h_three++;
-//					System.out.println("a_h_three at : ("+r+", "+c+")");
+					System.out.println("a_h_three at : ("+r+", "+c+")");
 				}
 				else{
 					tmpScore.a_three++;
-//					System.out.println("a_three at : ("+r+", "+c+")");
+					System.out.println("a_three at : ("+r+", "+c+")");
 				}
 			} else {
 				tmpScore.a_three++;
-//				System.out.println("a_three at : ("+r+", "+c+")");
+				System.out.println("a_three at : ("+r+", "+c+")");
 			}
 		} else if (posCount == 4) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
 				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.a_h_four++;
-//					System.out.println("a_h_four at : ("+r+", "+c+")");
+					System.out.println("a_h_four at : ("+r+", "+c+")");
 				}
 				else{
 					tmpScore.a_four++;
-//					System.out.println("a_four at : ("+r+", "+c+")");
+					System.out.println("a_four at : ("+r+", "+c+")");
 				}
 			} else {
 				tmpScore.a_four++;
-//				System.out.println("a_four at : ("+r+", "+c+")");
+				System.out.println("a_four at : ("+r+", "+c+")");
 			}
 		} else if (posCount == 5) {
 			tmpScore.a_five++;
-//			System.out.println("a_five at : ("+r+", "+c+")");
+			System.out.println("a_five at : ("+r+", "+c+")");
 		}
 
 		/* count negScore */
 		if (negCount == 2) {
 			tmpScore.d_two++;
-//			System.out.println("d_two at : ("+r+", "+c+")");
+			System.out.println("d_two at : ("+r+", "+c+")");
 		} else if (negCount == 3) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
 				if (b[r + dr * 5][c + dc * 5] == empty && b[r + dr * 4][c + dc * 4] == empty  && b[r][c] == empty) {
 					tmpScore.d_h_three++;
-//					System.out.println("d_h_three at : ("+r+", "+c+")");
+					System.out.println("d_h_three at : ("+r+", "+c+")");
 				}
 				else{
 					tmpScore.d_three++;
-//					System.out.println("d_three at : ("+r+", "+c+")");
+					System.out.println("d_three at : ("+r+", "+c+")");
 				}
 			} else {
 				tmpScore.d_three++;
-//				System.out.println("d_three at : ("+r+", "+c+")");
+				System.out.println("d_three at : ("+r+", "+c+")");
 			}
 		} else if (negCount == 4) {
 			if (r + dr * 5 < maxRow && c + dc * 5 < maxCol) {
 				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.d_h_four++;
-//					System.out.println("d_four at : ("+r+", "+c+")");
+					System.out.println("d_four at : ("+r+", "+c+")");
 				}
 				else{
 					tmpScore.d_four++;
-//					System.out.println("d_four at : ("+r+", "+c+")");
+					System.out.println("d_four at : ("+r+", "+c+")");
 				}
 			} else {
 				tmpScore.d_four++;
-//				System.out.println("d_four at : ("+r+", "+c+")");
+				System.out.println("d_four at : ("+r+", "+c+")");
 			}
 		} else if (negCount == 5) {
 			tmpScore.d_five++;
-//			System.out.println("d_five at : ("+r+", "+c+")");
+			System.out.println("d_five at : ("+r+", "+c+")");
 		}
 
 		return tmpScore;

@@ -121,7 +121,7 @@ public class ChessBoard implements Cloneable{
 	    	MyScore myScore = chessBoard.moveQ(old, chessType);
 	    	System.out.println("Score: "+myScore.getScore()+", ATK: "+myScore.getAttackScore()+", DEF:"+myScore.getDefenseScore());
 	    	Main.showChessboard(chessBoard);
-//	    	myScore.getStatus();
+	    	myScore.getStatus();
 	    	chessType = ChessType.nextType(chessType);
 		}
 		

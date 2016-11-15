@@ -11,8 +11,8 @@ public class MyScore {
 	int d_h_four;
 	int a_five;
 	int d_five;
-	final static double aRatio = 1.0;
-	final static double dRatio = 1.2;
+	final static double aRatio = 1.2;
+	final static double dRatio = 1.0;
 	final static int WIN = 1000000;
 	final static int FOUR = 1000;
 	final static int H_FOUR = 2000;
@@ -92,20 +92,17 @@ public class MyScore {
 	
 	public void getStatus() {
 		System.out.println("a_two=" + a_two);
-		
-		System.out.println("a_three=" + a_three);
-		System.out.println("a_four=" + a_four);
-		System.out.println("a_h_three=" + a_h_three);
-		System.out.println("a_h_four=" + a_h_four);
-		System.out.println("a_five=" + a_five);
-		System.out.println("----------------------");
 		System.out.println("d_two=" + d_two);
+		System.out.println("a_three=" + a_three);
 		System.out.println("d_three=" + d_three);
-		System.out.println("d_h_three=" + d_h_three);
+		System.out.println("a_four=" + a_four);
 		System.out.println("d_four=" + d_four);
+		System.out.println("a_h_three=" + a_h_three);
+		System.out.println("d_h_three=" + d_h_three);
+		System.out.println("a_h_four=" + a_h_four);
 		System.out.println("d_h_four=" + d_h_four);
+		System.out.println("a_five=" + a_five);
 		System.out.println("d_five=" + d_five);
-		System.out.println("----------------------");
 	}
 	
 }
