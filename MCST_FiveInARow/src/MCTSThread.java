@@ -99,7 +99,7 @@ public class MCTSThread extends Thread{
 			}
 			
 			//pass the second Selected node, return a result that the node will win or not
-			ChessType result = simulate(secondSelected, chessBoard_tmp);
+			ChessType result = simulate_greedy(secondSelected, chessBoard_tmp, secondSelected);
 
 			//-----------------------------//
 			//------START simulate---------//
@@ -319,7 +319,7 @@ public class MCTSThread extends Thread{
 		return searchTheRange(chessBoard, point.x, point.y);
 	}
 	
-	private void simulate_greedy(Node node, ChessBoard chessBoard, Node root) {
+	private ChessType simulate_greedy(Node node, ChessBoard chessBoard, Node root) {
 		if(node.simuLayer < MAX_SIMULAYER && !chessBoard.isWin(chessBoard, node.getChesstype(), node.getPoint())) {
 			node.addAllChild(findPossibleMove(node, chessBoard));
 			
@@ -337,6 +337,13 @@ public class MCTSThread extends Thread{
 			root.Q += chessBoard.QScore(node.getPoint().x, node.getPoint().y, node.getChesstype()).getScore();
 			chessBoard.move(node.getPoint(), node.getChesstype());
 		}
+		
+		if(node == root) {
+			return (root.Q >= 0) ? root.getChesstype() : ChessType.nextType(root.getChesstype());
+		}
+		else {
+			return null;
+		}
 	}
 	
 	private ArrayList<Node> findPossibleMove(Node parent, ChessBoard chessBoard) {
@@ -351,6 +358,7 @@ public class MCTSThread extends Thread{
 		}
 		
 		for(Node node : possible) {
+//			System.out.println(node.getPoint().x + " " + node.getPoint().y + " " + node.getChesstype());
 			node.Q = chessBoard.QScore(node.getPoint().x, node.getPoint().y, node.getChesstype()).getScore();
 		}
 		possible.sort(new Comparator<Node>(){
