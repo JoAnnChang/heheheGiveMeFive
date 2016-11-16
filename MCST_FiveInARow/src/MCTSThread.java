@@ -326,7 +326,7 @@ public class MCTSThread extends Thread{
 			
 			for(Node c : node.getChildren()){
 				c.simuLayer = node.simuLayer + 1;
-//				System.out.println(c.simuLayer + "");
+				//System.out.println(c.simuLayer + "");
 				
 				chessBoard.move(c.getPoint(), c.getChesstype());
 				simulate_greedy(c, chessBoard, root);
@@ -341,6 +341,7 @@ public class MCTSThread extends Thread{
 		}
 		
 		if(node == root) {
+			root.removeAllChild();
 			return (root.Q >= 0) ? root.getChesstype() : ChessType.nextType(root.getChesstype());
 		}
 		else {

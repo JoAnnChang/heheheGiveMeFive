@@ -51,6 +51,10 @@ public class Node {
 		return this.children;
 	}
 	
+	public void removeAllChild() {
+		this.children = new ArrayList<Node>();
+	}
+	
 	public Point getPoint(){
 		return point;
 	}
