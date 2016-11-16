@@ -328,7 +328,7 @@ public class ChessBoard implements Cloneable{
 //				System.out.println("d_three at : ("+r+", "+c+")");
 			}
 		} else if (negCount == 4) {
-			if (r+dr*5 < maxRow && c+dc*5 < maxCol && c+dc*5 >= 0) {
+			if (r+dr*5 < maxRow && c+dc*5 < maxCol && c-dc >= 0) {
 				if (b[r + dr * 5][c + dc * 5] == empty && b[r][c] == empty) {
 					tmpScore.d_h_four++;
 //					System.out.println("d_four at : ("+r+", "+c+")");

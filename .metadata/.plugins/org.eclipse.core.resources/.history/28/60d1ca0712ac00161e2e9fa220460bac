@@ -1,0 +1,198 @@
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import org.omg.CORBA.MARSHAL;
+
+
+
+
+public class Main {
+	private ChessBoard chessBoard;
+	public enum Alpha{
+		a,b,c,d,e,f,g,h,i,j,k,l,m,n,o;
+		public static String getAlpha(int num){
+			Character character = 'a';
+			character = (char) (character+num);
+			return character.toString();
+		}
+	}
+	
+	
+	public static void main(String[] args) {
+		new Main();
+	}
+	
+	public Main() {
+
+		ChessType chessType = ChessType.BLACK;
+		
+		int count = 200;
+		MCTSThread mctsThread;
+		
+		init();
+		
+		
+		int cnt = 0;
+		showChessboard(chessBoard);
+		int gameTime = 9;
+		int w = 0, b = 0;
+		while(gameTime -- > 0){
+			chessBoard.reset();
+			cnt = 0;
+		while(true) {
+//			input 
+//			Scanner scanner = new Scanner(System.in);
+//			String input = scanner.nextLine();
+//			
+//			String[] text = input.split(" ");
+//			int r = Alpha.valueOf(text[0]).ordinal();
+//			int c = Integer.valueOf(text[1]);
+//			Point p = new Point(r, c);
+//			
+//			if(chessBoard.move(p, ChessType.BLACK) == 1){
+//				System.out.println("BLACK WIN");
+//				showChessboard(chessBoard);
+//				break;
+//			}
+//
+			Point p = new Point(7, 7);
+			if(cnt == 0){
+				String r = Alpha.getAlpha(p.x);
+				int c = p.y;
+				System.out.println("BLACK: "+r+", "+c);
+				
+				chessBoard.move(p, ChessType.BLACK);
+				cnt=1;
+			}
+			else {
+				ChessBoard chessBoard_tmp = chessBoard.clone();
+				mctsThread = new MCTSThread(chessBoard_tmp, new Node(null, ChessType.BLACK, p));
+				p = mctsThread.next();
+
+				String r = Alpha.getAlpha(p.x);
+				int c = p.y;
+				System.out.println("BLACK: "+r+", "+c);
+				if(chessBoard.move(p, ChessType.BLACK) == 1){
+					b ++;
+					System.out.println("BLACK WIN");
+					showChessboard(chessBoard);
+					break;
+				}
+			}
+			showChessboard(chessBoard);
+
+			
+			Scanner scanner = new Scanner(System.in);
+			String input = scanner.nextLine();
+			
+			String[] text = input.split(" ");
+			int r = Alpha.valueOf(text[0]).ordinal();
+			int c = Integer.valueOf(text[1]);
+			p = new Point(r, c);
+			
+			if(chessBoard.move(p, ChessType.WHITE) == 1){
+				System.out.println("WHITE WIN");
+				showChessboard(chessBoard);
+				break;
+			}
+
+			
+			// mcts thread
+//			ChessBoard chessBoard_tmp = chessBoard.clone();
+//			mctsThread = new MCTSThread(chessBoard_tmp, new Node(null, ChessType.WHITE, p));
+//			Point point = mctsThread.next();
+//
+//			String r2 = Alpha.getAlpha(point.x);
+//			int c2 = point.y;
+//			System.out.println("WHITE: "+r2+", "+c2);
+//			
+////			chessboard2.setChess(point, com.zhixiangli.smartgomoku.model.ChessType.WHITE);
+//			if(chessBoard.move(point, ChessType.WHITE) == 1){
+//				w++;
+//				System.out.println("WHITE WIN");
+//				showChessboard(chessBoard);
+//				break;
+//			}
+			showChessboard(chessBoard);
+		
+		}
+		}
+		System.out.println("b: "+b+", w: "+ w);
+
+	}
+	
+	public static void showChessboard(ChessBoard chessboard){
+		for(int i=0; i<15; i++){
+			System.out.printf(" %2d", i);
+		}
+		System.out.println();
+		for(int i=0; i<chessboard.maxRow; i++){
+			System.out.print(Alpha.getAlpha(i).toUpperCase());
+			for(int j=0; j<chessboard.maxCol; j++){
+				//System.out.print(chessboard.getChess(i, j));
+				if(chessboard.getBoardStatus(i, j) == ChessType.BLACK){
+					System.out.print(" X ");
+				}
+				else if(chessboard.getBoardStatus(i, j) == ChessType.WHITE){
+					System.out.print(" O ");
+				}
+				else if(chessboard.getBoardStatus(i, j) == ChessType.EMPTY){
+					System.out.print(" _ ");
+				}
+			}
+			System.out.println("");
+		}
+		System.out.println("");
+	}
+	
+	private Node input() {
+		/*
+		 * format ex: [Black (H,7)]
+		 */
+		
+		return null;
+	}
+	
+	private void output(Node n) {
+		/*
+		 * format ex: [Black (H,7)]
+		 */
+	}
+	
+	private void init() {
+		chessBoard = new ChessBoard();
+	}
+	
+	private void oldAI(){
+//		System.out.println("ROUND");
+//		Point p = new Point(7, 7);
+//		if(cnt == 0){
+//			int r = p.x;
+//			String c = Alpha.getAlpha(p.y);
+//			System.out.println("BLACK: "+String.valueOf(15 - r)+", "+c);
+//			
+//			chessboard2.setChess(p, com.zhixiangli.smartgomoku.model.ChessType.BLACK);
+//			if(chessBoard.move(p, ChessType.BLACK) == 1){
+//				System.out.println("BLACK WIN");
+//				
+//			}
+//			cnt++;
+//		}
+//		else {
+//			p = Main2.next(chessboard2, com.zhixiangli.smartgomoku.model.ChessType.BLACK);
+//			
+//			int r = p.x;
+//			String c = Alpha.getAlpha(p.y);
+//			System.out.println("BLACK: "+String.valueOf(15 - r)+", "+c);
+//			chessboard2.setChess(p, com.zhixiangli.smartgomoku.model.ChessType.BLACK);
+//			if(chessBoard.move(p, ChessType.BLACK) == 1){
+//				System.out.println("BLACK WIN");
+//				
+//			}
+//		}
+
+	}
+	
+	
+}
