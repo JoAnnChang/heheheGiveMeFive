@@ -100,6 +100,7 @@ public class MCTSThread extends Thread{
 			
 			//pass the second Selected node, return a result that the node will win or not
 			ChessType result = simulate_greedy(secondSelected, chessBoard_tmp, secondSelected);
+			System.out.println("simulation");
 
 			//-----------------------------//
 			//------START simulate---------//
@@ -324,7 +325,8 @@ public class MCTSThread extends Thread{
 			node.addAllChild(findPossibleMove(node, chessBoard));
 			
 			for(Node c : node.getChildren()){
-				c.simuLayer++;
+				c.simuLayer = node.simuLayer + 1;
+//				System.out.println(c.simuLayer + "");
 				
 				chessBoard.move(c.getPoint(), c.getChesstype());
 				simulate_greedy(c, chessBoard, root);
