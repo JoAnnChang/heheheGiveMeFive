@@ -285,7 +285,7 @@ public class ChessBoard implements Cloneable{
 				if(b[r+dr*3][c+dc*3]==empty) {
 					tmpScore.a_three--;
 				}
-//				System.out.println("a_h_three at : ("+r+", "+c+")");
+				System.out.println("a_h_three at : ("+r+", "+c+")");
 			} else {
 				tmpScore.a_three++;
 //				System.out.println("a_three at : ("+r+", "+c+")");
@@ -306,7 +306,7 @@ public class ChessBoard implements Cloneable{
 			}
 		} else if (posCount == 5) {
 			tmpScore.a_five++;
-//			System.out.println("a_five at : ("+r+", "+c+")");
+			System.out.println("a_five at : ("+r+", "+c+")");
 		}
 
 		/* count negScore */
@@ -343,7 +343,7 @@ public class ChessBoard implements Cloneable{
 			}
 		} else if (negCount == 5) {
 			tmpScore.d_five++;
-//			System.out.println("d_five at : ("+r+", "+c+")");
+			System.out.println("d_five at : ("+r+", "+c+")");
 		}
 
 		return tmpScore;
